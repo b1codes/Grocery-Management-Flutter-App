@@ -1,12 +1,4 @@
-part of 'store_bloc.dart';
+export 'events/fetch_stores.dart';
+export 'events/add_store.dart';
 
 abstract class StoreEvent {}
-
-class FetchStores extends StoreEvent {}
-
-class AddStore extends StoreEvent {
-  final String name;
-  final String address;
-
-  AddStore({required this.name, required this.address});
-}

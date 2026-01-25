@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/bloc/pantry/pantry_bloc.dart';
-import 'package:grocery_management_frontend/widgets/pantry_item_card.dart';
+import 'package:grocery_management_frontend/components/pantry_item_card.dart';
 
 class PantryListScreen extends StatelessWidget {
   const PantryListScreen({super.key});
@@ -9,9 +9,7 @@ class PantryListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pantry'),
-      ),
+      appBar: AppBar(title: const Text('Pantry')),
       body: BlocBuilder<PantryBloc, PantryState>(
         builder: (context, state) {
           if (state.status == PantryStatus.loading) {
@@ -88,13 +86,13 @@ class PantryListScreen extends StatelessWidget {
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   context.read<PantryBloc>().add(
-                        AddPantryItem(
-                          name: nameController.text,
-                          quantity: int.parse(quantityController.text),
-                          // TODO: Implement category selection
-                          categoryId: 1,
-                        ),
-                      );
+                    AddPantryItem(
+                      name: nameController.text,
+                      quantity: int.parse(quantityController.text),
+                      // TODO: Implement category selection
+                      categoryId: 1,
+                    ),
+                  );
                   Navigator.of(dialogContext).pop();
                 }
               },

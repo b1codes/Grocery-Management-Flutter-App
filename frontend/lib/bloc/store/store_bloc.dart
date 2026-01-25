@@ -1,16 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/models/store.dart';
-import 'package:grocery_management_frontend/networking/store_repository.dart';
+import 'package:grocery_management_frontend/services/managers/store_manager.dart';
 
-part 'store_event.dart';
-part 'store_state.dart';
+import 'store_event.dart';
+import 'store_state.dart';
+
+export 'store_event.dart';
+export 'store_state.dart';
 
 class StoreBloc extends Bloc<StoreEvent, StoreState> {
-  final StoreRepository _storeRepository;
+  final StoreManager _storeManager;
 
-  StoreBloc({required StoreRepository storeRepository})
-      : _storeRepository = storeRepository,
-        super(const StoreState()) {
+  StoreBloc({required StoreManager storeManager})
+    : _storeManager = storeManager,
+      super(const StoreState()) {
     on<FetchStores>(_onFetchStores);
     on<AddStore>(_onAddStore);
   }
@@ -18,7 +21,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   void _onFetchStores(FetchStores event, Emitter<StoreState> emit) async {
     emit(state.copyWith(status: StoreStatus.loading));
     try {
-      final stores = await _storeRepository.getStores();
+      final stores = await _storeManager.getStores();
       emit(state.copyWith(status: StoreStatus.success, stores: stores));
     } catch (e) {
       emit(state.copyWith(status: StoreStatus.failure));
@@ -27,7 +30,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
   void _onAddStore(AddStore event, Emitter<StoreState> emit) async {
     try {
-      final newStore = await _storeRepository.createStore(event.name, event.address);
+      final newStore = await _storeManager.createStore(
+        event.name,
+        event.address,
+      );
       final updatedStores = List<Store>.from(state.stores)..add(newStore);
       emit(state.copyWith(status: StoreStatus.success, stores: updatedStores));
     } catch (e) {

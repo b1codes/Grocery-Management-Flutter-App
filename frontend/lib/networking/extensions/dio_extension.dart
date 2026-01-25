@@ -10,15 +10,19 @@ class ApiClient {
 
   ApiClient._internal() {
     _dio = Dio();
-    _dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+    _dio.interceptors.add(
+      LogInterceptor(requestBody: true, responseBody: true),
+    );
   }
 
   void init(String baseUrl) {
     _dio.options.baseUrl = baseUrl;
   }
 
-  Future<Response<T>> get<T>(String path,
-      {Map<String, dynamic>? queryParameters}) async {
+  Future<Response<T>> get<T>(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
     return _dio.get(path, queryParameters: queryParameters);
   }
 

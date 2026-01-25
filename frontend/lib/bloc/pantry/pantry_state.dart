@@ -1,4 +1,4 @@
-part of 'pantry_bloc.dart';
+import 'package:grocery_management_frontend/models/pantry_item.dart';
 
 enum PantryStatus { initial, loading, success, failure }
 
@@ -11,10 +11,7 @@ class PantryState {
     this.status = PantryStatus.initial,
   });
 
-  PantryState copyWith({
-    List<PantryItem>? items,
-    PantryStatus? status,
-  }) {
+  PantryState copyWith({List<PantryItem>? items, PantryStatus? status}) {
     return PantryState(
       items: items ?? this.items,
       status: status ?? this.status,

@@ -5,12 +5,12 @@ import 'package:grocery_management_frontend/bloc/budget/budget_bloc.dart';
 import 'package:grocery_management_frontend/bloc/pantry/pantry_bloc.dart';
 import 'package:grocery_management_frontend/bloc/store/store_bloc.dart';
 import 'package:grocery_management_frontend/bloc/trips/trip_bloc.dart';
-import 'package:grocery_management_frontend/networking/api/api_client.dart';
-import 'package:grocery_management_frontend/networking/auth_repository.dart';
-import 'package:grocery_management_frontend/networking/budget_repository.dart';
-import 'package:grocery_management_frontend/networking/pantry_repository.dart';
-import 'package:grocery_management_frontend/networking/store_repository.dart';
-import 'package:grocery_management_frontend/networking/trip_repository.dart';
+import 'package:grocery_management_frontend/networking/extensions/dio_extension.dart';
+import 'package:grocery_management_frontend/services/managers/auth_manager.dart';
+import 'package:grocery_management_frontend/services/managers/budget_manager.dart';
+import 'package:grocery_management_frontend/services/managers/pantry_manager.dart';
+import 'package:grocery_management_frontend/services/managers/store_manager.dart';
+import 'package:grocery_management_frontend/services/managers/trip_manager.dart';
 import 'package:grocery_management_frontend/screens/auth/login_screen.dart';
 import 'package:grocery_management_frontend/screens/auth/register_screen.dart';
 import 'package:grocery_management_frontend/screens/dashboard/home_screen.dart';
@@ -21,7 +21,6 @@ import 'package:toastification/toastification.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
   StartupServices.startServices();
 
   const String environment = String.fromEnvironment('ENV', defaultValue: 'dev');
@@ -30,11 +29,7 @@ void main() async {
 
   ApiClient().init(AppConfig.baseUrl);
 
-  runApp(
-    const ToastificationWrapper(
-      child: MyApp(),
-    ),
-  );
+  runApp(const ToastificationWrapper(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -44,38 +39,35 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => AuthRepository()),
-        RepositoryProvider(create: (context) => PantryRepository()),
-        RepositoryProvider(create: (context) => StoreRepository()),
-        RepositoryProvider(create: (context) => TripRepository()),
-        RepositoryProvider(create: (context) => BudgetRepository()),
+        RepositoryProvider(create: (context) => AuthManager()),
+        RepositoryProvider(create: (context) => PantryManager()),
+        RepositoryProvider(create: (context) => StoreManager()),
+        RepositoryProvider(create: (context) => TripManager()),
+        RepositoryProvider(create: (context) => BudgetManager()),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => AuthBloc(
-              authRepository: context.read<AuthRepository>(),
-            ),
+            create: (context) =>
+                AuthBloc(authManager: context.read<AuthManager>()),
           ),
           BlocProvider(
-            create: (context) => PantryBloc(
-              pantryRepository: context.read<PantryRepository>(),
-            )..add(FetchPantryItems()),
+            create: (context) =>
+                PantryBloc(pantryManager: context.read<PantryManager>())
+                  ..add(FetchPantryItems()),
           ),
           BlocProvider(
-            create: (context) => StoreBloc(
-              storeRepository: context.read<StoreRepository>(),
-            )..add(FetchStores()),
+            create: (context) =>
+                StoreBloc(storeManager: context.read<StoreManager>())
+                  ..add(FetchStores()),
           ),
           BlocProvider(
-            create: (context) => TripBloc(
-              tripRepository: context.read<TripRepository>(),
-            ),
+            create: (context) =>
+                TripBloc(tripManager: context.read<TripManager>()),
           ),
           BlocProvider(
-            create: (context) => BudgetBloc(
-              budgetRepository: context.read<BudgetRepository>(),
-            ),
+            create: (context) =>
+                BudgetBloc(budgetManager: context.read<BudgetManager>()),
           ),
         ],
         child: MaterialApp(

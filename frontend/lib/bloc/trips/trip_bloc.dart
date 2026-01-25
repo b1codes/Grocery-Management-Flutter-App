@@ -1,17 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grocery_management_frontend/models/grocery_trip.dart';
 import 'package:grocery_management_frontend/models/purchased_item.dart';
-import 'package:grocery_management_frontend/networking/trip_repository.dart';
+import 'package:grocery_management_frontend/services/managers/trip_manager.dart';
 
-part 'trip_event.dart';
-part 'trip_state.dart';
+import 'trip_event.dart';
+import 'trip_state.dart';
+
+export 'trip_event.dart';
+export 'trip_state.dart';
 
 class TripBloc extends Bloc<TripEvent, TripState> {
-  final TripRepository _tripRepository;
+  final TripManager _tripManager;
 
-  TripBloc({required TripRepository tripRepository})
-      : _tripRepository = tripRepository,
-        super(const TripState()) {
+  TripBloc({required TripManager tripManager})
+    : _tripManager = tripManager,
+      super(const TripState()) {
     on<StartTrip>(_onStartTrip);
     on<AddItemToTrip>(_onAddItemToTrip);
     on<FinishTrip>(_onFinishTrip);
@@ -20,7 +22,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
 
   void _onStartTrip(StartTrip event, Emitter<TripState> emit) async {
     try {
-      final trip = await _tripRepository.startTrip(event.storeId);
+      final trip = await _tripManager.startTrip(event.storeId);
       emit(state.copyWith(status: TripStatus.active, trip: trip));
     } catch (e) {
       emit(state.copyWith(status: TripStatus.error));
@@ -30,8 +32,11 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   void _onAddItemToTrip(AddItemToTrip event, Emitter<TripState> emit) async {
     if (state.trip == null) return;
     try {
-      final newItem = await _tripRepository.addItemToTrip(
-          state.trip!.id, event.pantryItemId, event.price);
+      final newItem = await _tripManager.addItemToTrip(
+        state.trip!.id,
+        event.pantryItemId,
+        event.price,
+      );
       final updatedItems = List<PurchasedItem>.from(state.purchasedItems)
         ..add(newItem);
       emit(state.copyWith(purchasedItems: updatedItems));
@@ -43,7 +48,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   void _onFinishTrip(FinishTrip event, Emitter<TripState> emit) async {
     if (state.trip == null) return;
     try {
-      await _tripRepository.finishTrip(state.trip!.id);
+      await _tripManager.finishTrip(state.trip!.id);
       emit(state.copyWith(status: TripStatus.finished));
     } catch (e) {
       emit(state.copyWith(status: TripStatus.error));
@@ -51,9 +56,11 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   }
 
   void _onFetchTrips(FetchTrips event, Emitter<TripState> emit) async {
-    emit(state.copyWith(status: TripStatus.active)); // Or loading status if desired
+    emit(
+      state.copyWith(status: TripStatus.active),
+    ); // Or loading status if desired
     try {
-      final trips = await _tripRepository.getTrips(completed: event.completed);
+      final trips = await _tripManager.getTrips(completed: event.completed);
       emit(state.copyWith(trips: trips));
     } catch (e) {
       // Handle error if needed, but maybe don't change overall status if it interrupts active trip flow?

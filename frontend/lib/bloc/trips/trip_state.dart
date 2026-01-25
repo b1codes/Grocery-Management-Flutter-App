@@ -1,4 +1,5 @@
-part of 'trip_bloc.dart';
+import 'package:grocery_management_frontend/models/grocery_trip.dart';
+import 'package:grocery_management_frontend/models/purchased_item.dart';
 
 enum TripStatus { initial, active, finished, error }
 

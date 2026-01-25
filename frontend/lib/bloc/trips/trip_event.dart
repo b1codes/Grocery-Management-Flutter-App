@@ -1,24 +1,6 @@
-part of 'trip_bloc.dart';
+export 'events/start_trip.dart';
+export 'events/add_item_to_trip.dart';
+export 'events/finish_trip.dart';
+export 'events/fetch_trips.dart';
 
 abstract class TripEvent {}
-
-class StartTrip extends TripEvent {
-  final int storeId;
-
-  StartTrip({required this.storeId});
-}
-
-class AddItemToTrip extends TripEvent {
-  final int pantryItemId;
-  final double price;
-
-  AddItemToTrip({required this.pantryItemId, required this.price});
-}
-
-class FinishTrip extends TripEvent {}
-
-class FetchTrips extends TripEvent {
-  final bool? completed;
-
-  FetchTrips({this.completed});
-}

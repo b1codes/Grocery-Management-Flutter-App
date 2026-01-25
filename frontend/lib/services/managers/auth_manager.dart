@@ -1,41 +1,34 @@
 import 'package:grocery_management_frontend/models/user.dart';
-import 'package:grocery_management_frontend/networking/api/api_client.dart';
+import 'package:grocery_management_frontend/networking/api/auth_api.dart';
 import 'package:grocery_management_frontend/networking/dto/user_dto.dart';
 
-class AuthRepository {
-  final ApiClient _apiClient;
+class AuthManager {
+  final AuthApi _authApi;
 
-  AuthRepository({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
+  AuthManager({AuthApi? authApi}) : _authApi = authApi ?? AuthApi();
 
   Future<User> login(String email, String password) async {
-    final response = await _apiClient.post('/api/auth/login/', data: {
-      'email': email,
-      'password': password,
-    });
+    final response = await _authApi.login(email, password);
 
     final token = response.data['token'];
-    _apiClient.setAuthToken(token);
+    _authApi.setAuthToken(token);
 
     final userDto = UserDto.fromMap(response.data['user']);
     return userDto.toUser();
   }
 
   Future<User> register(String username, String email, String password) async {
-    final response = await _apiClient.post('/api/auth/register/', data: {
-      'username': username,
-      'email': email,
-      'password': password,
-    });
+    final response = await _authApi.register(username, email, password);
 
     final token = response.data['token'];
-    _apiClient.setAuthToken(token);
+    _authApi.setAuthToken(token);
 
     final userDto = UserDto.fromMap(response.data['user']);
     return userDto.toUser();
   }
 
   void logout() {
-    _apiClient.clearAuthToken();
+    _authApi.clearAuthToken();
   }
 }
 
