@@ -38,6 +38,8 @@ dependencies:
   dio: ^5.9.0
   dart_mappable: ^4.2.1
   toastification: ^2.0.0
+  bloc: ^9.2.0
+  equatable: ^2.0.8
 
 dev_dependencies:
   flutter_test:

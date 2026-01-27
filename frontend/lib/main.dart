@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/bloc/auth/auth_bloc.dart';
-import 'package:grocery_management_frontend/bloc/budget/budget_bloc.dart';
-import 'package:grocery_management_frontend/bloc/pantry/pantry_bloc.dart';
-import 'package:grocery_management_frontend/bloc/store/store_bloc.dart';
-import 'package:grocery_management_frontend/bloc/trips/trip_bloc.dart';
+import 'package:grocery_management_frontend/bloc/portal/portal_bloc.dart';
 import 'package:grocery_management_frontend/networking/extensions/dio_extension.dart';
 import 'package:grocery_management_frontend/services/managers/auth_manager.dart';
 import 'package:grocery_management_frontend/services/managers/budget_manager.dart';
@@ -13,7 +10,7 @@ import 'package:grocery_management_frontend/services/managers/store_manager.dart
 import 'package:grocery_management_frontend/services/managers/trip_manager.dart';
 import 'package:grocery_management_frontend/screens/auth/login_screen.dart';
 import 'package:grocery_management_frontend/screens/auth/register_screen.dart';
-import 'package:grocery_management_frontend/screens/dashboard/home_screen.dart';
+import 'package:grocery_management_frontend/screens/portal/portal_screen.dart';
 import 'package:grocery_management_frontend/services/app_config.dart';
 import 'package:grocery_management_frontend/services/startup_services.dart';
 import 'package:toastification/toastification.dart';
@@ -51,24 +48,7 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 AuthBloc(authManager: context.read<AuthManager>()),
           ),
-          BlocProvider(
-            create: (context) =>
-                PantryBloc(pantryManager: context.read<PantryManager>())
-                  ..add(FetchPantryItems()),
-          ),
-          BlocProvider(
-            create: (context) =>
-                StoreBloc(storeManager: context.read<StoreManager>())
-                  ..add(FetchStores()),
-          ),
-          BlocProvider(
-            create: (context) =>
-                TripBloc(tripManager: context.read<TripManager>()),
-          ),
-          BlocProvider(
-            create: (context) =>
-                BudgetBloc(budgetManager: context.read<BudgetManager>()),
-          ),
+          BlocProvider(create: (context) => PortalBloc()),
         ],
         child: MaterialApp(
           title: 'Grocery Management',
@@ -80,7 +60,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/login': (context) => const LoginScreen(),
             '/register': (context) => const RegisterScreen(),
-            '/home': (context) => const HomeScreen(),
+            '/home': (context) => const PortalScreen(),
           },
         ),
       ),
@@ -96,7 +76,7 @@ class AuthWrapper extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state.status == AuthStatus.authenticated) {
-          return const HomeScreen();
+          return const PortalScreen();
         }
         return const LoginScreen();
       },
