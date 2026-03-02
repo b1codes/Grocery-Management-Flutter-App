@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "BeforeAgent": [
+      {
+        "command": "./.gemini/hooks/project-pulse.sh"
+      }
+    ],
+    "BeforeTool": [
+      {
+        "command": "./.gemini/hooks/auto-format.sh"
+      }
+    ],
+    "AfterAgent": [
+      {
+        "command": "./.gemini/hooks/definition-of-done.sh"
+      }
+    ]
+  }
+}
