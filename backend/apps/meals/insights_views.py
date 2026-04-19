@@ -18,9 +18,12 @@ class InsightsView(APIView):
     def get(self, request):
         user = request.user
 
-        # 1. Fetch user's top 10 PurchasedItems
-        # Group by pantry_item and its name, count occurrences
-        top_purchases = PurchasedItem.objects.filter(trip__user=user) \
+        # 1. Fetch user's top 10 PurchasedItems from the 100 most recent items
+        recent_purchases_ids = PurchasedItem.objects.filter(trip__user=user) \
+            .order_by('-trip__trip_date', '-id')[:100] \
+            .values_list('id', flat=True)
+
+        top_purchases = PurchasedItem.objects.filter(id__in=recent_purchases_ids) \
             .values('pantry_item__name') \
             .annotate(purchase_count=Count('pantry_item')) \
             .order_by('-purchase_count')[:10]

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,7 +23,7 @@ AUTH_USER_MODEL = 'authentication.User'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q2mb41a+!lvya0flqz8ecl0lm@#@cx&=4&n6xou)*np713ioq8'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-q2mb41a+!lvya0flqz8ecl0lm@#@cx&=4&n6xou)*np713ioq8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -132,5 +133,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import os
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')

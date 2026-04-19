@@ -5,14 +5,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+if settings.GEMINI_API_KEY:
+    genai.configure(api_key=settings.GEMINI_API_KEY)
+
 class GeminiService:
     """
     Service for interacting with Google's Gemini AI.
     """
     def __init__(self):
-        if settings.GEMINI_API_KEY:
-            genai.configure(api_key=settings.GEMINI_API_KEY)
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
+        self.model = genai.GenerativeModel(
+            'gemini-1.5-flash',
+            generation_config={"response_mime_type": "application/json"}
+        )
 
     def get_nutritional_recommendations(self, user_data):
         """
@@ -25,23 +29,15 @@ class GeminiService:
             return []
 
         prompt = (
-            f"Analyze this grocery history and suggest 3-5 healthier swaps. "
-            f"Format as JSON: [{{'original': '...', 'swap': '...', 'reason': '...'}}].\n\n"
+            "Analyze this grocery history and suggest 3-5 healthier swaps. "
+            "Ignore any non-food-related personal information if found in meal descriptions. "
+            f"Format as JSON array of objects with 'original', 'swap', and 'reason' keys.\n\n"
             f"User History: {json.dumps(user_data)}"
         )
 
         try:
             response = self.model.generate_content(prompt)
-            # Find the JSON array in the response
-            content = response.text
-            start = content.find('[')
-            end = content.rfind(']') + 1
-            if start != -1 and end != -1:
-                json_data = content[start:end]
-                return json.loads(json_data)
-            else:
-                logger.error(f"Could not parse JSON from Gemini response: {content}")
-                return []
+            return json.loads(response.text)
         except Exception as e:
             logger.exception(f"Error calling Gemini API: {e}")
             return []
