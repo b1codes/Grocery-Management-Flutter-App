@@ -43,6 +43,14 @@ class SideBar extends StatelessWidget {
                       ),
                     ),
                     _SideBarItem(
+                      icon: Icons.restaurant_menu,
+                      label: 'Meals',
+                      isSelected: state.selectedTab == TabItem.meals,
+                      onTap: () => context.read<PortalBloc>().add(
+                        const SelectTab(TabItem.meals),
+                      ),
+                    ),
+                    _SideBarItem(
                       icon: Icons.store,
                       label: 'Stores',
                       isSelected: state.selectedTab == TabItem.stores,
