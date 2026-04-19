@@ -6,6 +6,7 @@ import 'package:grocery_management_frontend/bloc/trips/trip_bloc.dart';
 import 'package:grocery_management_frontend/components/side_bar.dart';
 import 'package:grocery_management_frontend/screens/budget/budget_bloc_widget.dart';
 import 'package:grocery_management_frontend/screens/dashboard/home_screen.dart';
+import 'package:grocery_management_frontend/screens/dashboard/insights_screen.dart';
 import 'package:grocery_management_frontend/screens/meals/meal_bloc_widget.dart';
 import 'package:grocery_management_frontend/screens/pantry/pantry_bloc_widget.dart';
 import 'package:grocery_management_frontend/screens/stores/store_bloc_widget.dart';
@@ -67,6 +68,8 @@ class PortalScreen extends StatelessWidget {
         return const TripBlocWidget();
       case TabItem.budget:
         return const BudgetBlocWidget();
+      case TabItem.insights:
+        return const InsightsScreen();
       case TabItem.settings:
         return const Center(child: Text("Settings Module Coming Soon"));
     }

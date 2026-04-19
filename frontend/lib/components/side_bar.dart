@@ -74,6 +74,14 @@ class SideBar extends StatelessWidget {
                         const SelectTab(TabItem.budget),
                       ),
                     ),
+                    _SideBarItem(
+                      icon: Icons.lightbulb,
+                      label: 'Insights',
+                      isSelected: state.selectedTab == TabItem.insights,
+                      onTap: () => context.read<PortalBloc>().add(
+                        const SelectTab(TabItem.insights),
+                      ),
+                    ),
                   ],
                 );
               },

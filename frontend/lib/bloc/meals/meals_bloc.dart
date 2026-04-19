@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/services/managers/meal_manager.dart';
 import 'package:grocery_management_frontend/models/meal.dart';
+import 'package:grocery_management_frontend/services/managers/trip_manager.dart';
 
 import 'meals_event.dart';
 import 'meals_state.dart';
 
 export 'meals_event.dart';
 export 'meals_state.dart';
-import 'package:grocery_management_frontend/services/managers/trip_manager.dart';
-...
+
 class MealsBloc extends Bloc<MealsEvent, MealsState> {
   final MealManager _mealManager;
   final TripManager _tripManager;
@@ -28,7 +28,6 @@ class MealsBloc extends Bloc<MealsEvent, MealsState> {
   void _onCookMeal(CookMeal event, Emitter<MealsState> emit) async {
     try {
       await _mealManager.cookMeal(event.meal);
-      // Refresh meals or pantry? Pantry refresh might be needed elsewhere.
     } catch (e) {
       emit(state.copyWith(status: MealsStatus.failure));
     }

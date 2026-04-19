@@ -1,6 +1,6 @@
 part of 'portal_bloc.dart';
 
-enum TabItem { dashboard, pantry, meals, stores, trips, budget, settings }
+enum TabItem { dashboard, pantry, meals, stores, trips, budget, insights, settings }
 
 final class PortalState extends Equatable {
   final TabItem selectedTab;
