@@ -50,11 +50,30 @@ class TripManager {
   Future<PurchasedItem> addItemToTrip(
     int tripId,
     int pantryItemId,
-    double price,
-  ) async {
-    final response = await _tripApi.addItemToTrip(tripId, pantryItemId, price);
+    double price, {
+    int quantity = 1,
+  }) async {
+    final response = await _tripApi.addItemToTrip(
+      tripId,
+      pantryItemId,
+      price,
+      quantity: quantity,
+    );
     final itemDto = PurchasedItemDto.fromMap(response.data);
     return itemDto.toPurchasedItem();
+  }
+
+  Future<void> addMealToTrip(int tripId, Meal meal) async {
+    for (final ingredient in meal.ingredients) {
+      if (ingredient.pantryItemTemplate != null) {
+        await addItemToTrip(
+          tripId,
+          ingredient.pantryItemTemplate!.id!,
+          ingredient.pantryItemTemplate!.regularPrice,
+          quantity: ingredient.quantity.toInt(),
+        );
+      }
+    }
   }
 
   Future<void> finishTrip(int tripId) async {

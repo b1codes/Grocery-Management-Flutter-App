@@ -39,7 +39,11 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(create: (context) => AuthManager()),
         RepositoryProvider(create: (context) => PantryManager()),
-        RepositoryProvider(create: (context) => MealManager()),
+        RepositoryProvider(
+          create: (context) => MealManager(
+            pantryManager: context.read<PantryManager>(),
+          ),
+        ),
         RepositoryProvider(create: (context) => StoreManager()),
         RepositoryProvider(create: (context) => TripManager()),
         RepositoryProvider(create: (context) => BudgetManager()),

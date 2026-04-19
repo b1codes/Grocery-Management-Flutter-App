@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/bloc/meals/meals_bloc.dart';
 import 'package:grocery_management_frontend/models/meal.dart';
 import 'add_meal_screen.dart';
+import 'meal_detail_screen.dart';
 
 class MealListScreen extends StatelessWidget {
   const MealListScreen({super.key});
@@ -50,9 +51,14 @@ class MealListScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  onTap: () {
-                    // TODO: Navigate to Detail/Edit
-                  },
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<MealsBloc>(),
+                        child: MealDetailScreen(meal: meal),
+                      ),
+                    ),
+                  ),
                 ),
               );
             },

@@ -24,14 +24,15 @@ class TripApi {
   Future<Response> addItemToTrip(
     int tripId,
     int pantryItemId,
-    double price,
-  ) async {
+    double price, {
+    int quantity = 1,
+  }) async {
     return _apiClient.post(
       '/api/trips/$tripId/items/',
       data: {
         'pantry_item': pantryItemId,
         'purchase_price': price,
-        'quantity_bought': 1,
+        'quantity_bought': quantity,
       },
     );
   }

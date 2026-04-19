@@ -2,10 +2,33 @@ import 'dart:developer' as developer;
 import 'package:grocery_management_frontend/models/meal.dart';
 import 'package:grocery_management_frontend/networking/api/meal_api.dart';
 
+import 'package:grocery_management_frontend/services/managers/pantry_manager.dart';
+
 class MealManager {
   final MealApi _mealApi;
+  final PantryManager _pantryManager;
 
-  MealManager({MealApi? mealApi}) : _mealApi = mealApi ?? MealApi();
+  MealManager({MealApi? mealApi, PantryManager? pantryManager})
+      : _mealApi = mealApi ?? MealApi(),
+        _pantryManager = pantryManager ?? PantryManager();
+
+  Future<void> cookMeal(Meal meal) async {
+    try {
+      for (final ingredient in meal.ingredients) {
+        if (ingredient.pantryItemTemplate != null) {
+          final item = ingredient.pantryItemTemplate!;
+          final newQuantity = (item.quantity - ingredient.quantity).toInt();
+          await _pantryManager.updatePantryItemQuantity(
+            item.id!,
+            newQuantity > 0 ? newQuantity : 0,
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      developer.log('Error cooking meal', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
 
   Future<List<Meal>> getMeals() async {
     try {
