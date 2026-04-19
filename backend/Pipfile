@@ -9,10 +9,10 @@ djangorestframework = "*"
 phonenumbers = "*"
 python-dateutil = "*"
 django-filter = "*"
+google-generativeai = "*"
 
 [dev-packages]
 django-debug-toolbar = "*"
 
 [requires]
 python_version = "3.12"
-

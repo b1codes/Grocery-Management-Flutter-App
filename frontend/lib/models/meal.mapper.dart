@@ -22,8 +22,8 @@ class MealMapper extends ClassMapperBase<Meal> {
   @override
   final String id = 'Meal';
 
-  static int _$id(Meal v) => v.id;
-  static const Field<Meal, int> _f$id = Field('id', _$id);
+  static int? _$id(Meal v) => v.id;
+  static const Field<Meal, int> _f$id = Field('id', _$id, opt: true);
   static String _$name(Meal v) => v.name;
   static const Field<Meal, String> _f$name = Field('name', _$name);
   static String? _$description(Meal v) => v.description;
@@ -32,8 +32,8 @@ class MealMapper extends ClassMapperBase<Meal> {
     _$description,
     opt: true,
   );
-  static int _$user(Meal v) => v.user;
-  static const Field<Meal, int> _f$user = Field('user', _$user);
+  static int? _$user(Meal v) => v.user;
+  static const Field<Meal, int> _f$user = Field('user', _$user, opt: true);
   static bool _$isFavorite(Meal v) => v.isFavorite;
   static const Field<Meal, bool> _f$isFavorite = Field(
     'isFavorite',
@@ -46,6 +46,8 @@ class MealMapper extends ClassMapperBase<Meal> {
   static const Field<Meal, List<MealIngredient>> _f$ingredients = Field(
     'ingredients',
     _$ingredients,
+    opt: true,
+    def: const [],
   );
 
   @override
@@ -151,18 +153,18 @@ class _MealCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Meal, $Out>
   );
   @override
   $R call({
-    int? id,
+    Object? id = $none,
     String? name,
     Object? description = $none,
-    int? user,
+    Object? user = $none,
     bool? isFavorite,
     List<MealIngredient>? ingredients,
   }) => $apply(
     FieldCopyWithData({
-      if (id != null) #id: id,
+      if (id != $none) #id: id,
       if (name != null) #name: name,
       if (description != $none) #description: description,
-      if (user != null) #user: user,
+      if (user != $none) #user: user,
       if (isFavorite != null) #isFavorite: isFavorite,
       if (ingredients != null) #ingredients: ingredients,
     }),
@@ -197,8 +199,8 @@ class MealIngredientMapper extends ClassMapperBase<MealIngredient> {
   @override
   final String id = 'MealIngredient';
 
-  static int _$id(MealIngredient v) => v.id;
-  static const Field<MealIngredient, int> _f$id = Field('id', _$id);
+  static int? _$id(MealIngredient v) => v.id;
+  static const Field<MealIngredient, int> _f$id = Field('id', _$id, opt: true);
   static PantryItem _$pantryItemTemplate(MealIngredient v) =>
       v.pantryItemTemplate;
   static const Field<MealIngredient, PantryItem> _f$pantryItemTemplate = Field(
@@ -324,13 +326,13 @@ class _MealIngredientCopyWithImpl<$R, $Out>
       );
   @override
   $R call({
-    int? id,
+    Object? id = $none,
     PantryItem? pantryItemTemplate,
     double? quantity,
     Object? unit = $none,
   }) => $apply(
     FieldCopyWithData({
-      if (id != null) #id: id,
+      if (id != $none) #id: id,
       if (pantryItemTemplate != null) #pantryItemTemplate: pantryItemTemplate,
       if (quantity != null) #quantity: quantity,
       if (unit != $none) #unit: unit,
