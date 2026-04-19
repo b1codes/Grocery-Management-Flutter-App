@@ -14,7 +14,7 @@ class Meal(DefaultModel):
 
 class MealIngredient(DefaultModel):
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='ingredients')
-    pantry_item_template = models.ForeignKey(PantryItem, on_delete=models.CASCADE)
+    pantry_item_template = models.ForeignKey(PantryItem, on_delete=models.CASCADE, related_name='meal_ingredients')
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.CharField(max_length=50, blank=True, null=True)
 
