@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:grocery_management_frontend/models/meal.dart';
 import 'package:grocery_management_frontend/networking/api/meal_api.dart';
 
@@ -7,14 +8,24 @@ class MealManager {
   MealManager({MealApi? mealApi}) : _mealApi = mealApi ?? MealApi();
 
   Future<List<Meal>> getMeals() async {
-    final response = await _mealApi.getMeals();
-    final List<dynamic> data = response.data;
-    return data.map((e) => MealMapper.fromMap(e)).toList();
+    try {
+      final response = await _mealApi.getMeals();
+      final List<dynamic> data = response.data;
+      return data.map((e) => MealMapper.fromMap(e)).toList();
+    } catch (e, stackTrace) {
+      developer.log('Error getting meals', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   Future<Meal> getMeal(int id) async {
-    final response = await _mealApi.getMeal(id);
-    return MealMapper.fromMap(response.data);
+    try {
+      final response = await _mealApi.getMeal(id);
+      return MealMapper.fromMap(response.data);
+    } catch (e, stackTrace) {
+      developer.log('Error getting meal with id $id', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   Future<Meal> createMeal({
@@ -22,12 +33,17 @@ class MealManager {
     String? description,
     required List<Map<String, dynamic>> ingredients,
   }) async {
-    final response = await _mealApi.createMeal({
-      'name': name,
-      'description': description,
-      'ingredients': ingredients,
-    });
-    return MealMapper.fromMap(response.data);
+    try {
+      final response = await _mealApi.createMeal({
+        'name': name,
+        'description': description,
+        'ingredients': ingredients,
+      });
+      return MealMapper.fromMap(response.data);
+    } catch (e, stackTrace) {
+      developer.log('Error creating meal', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   Future<Meal> updateMeal(
@@ -37,21 +53,36 @@ class MealManager {
     bool? isFavorite,
     List<Map<String, dynamic>>? ingredients,
   }) async {
-    final response = await _mealApi.updateMeal(id, {
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (isFavorite != null) 'is_favorite': isFavorite,
-      if (ingredients != null) 'ingredients': ingredients,
-    });
-    return MealMapper.fromMap(response.data);
+    try {
+      final response = await _mealApi.updateMeal(id, {
+        if (name != null) 'name': name,
+        if (description != null) 'description': description,
+        if (isFavorite != null) 'is_favorite': isFavorite,
+        if (ingredients != null) 'ingredients': ingredients,
+      });
+      return MealMapper.fromMap(response.data);
+    } catch (e, stackTrace) {
+      developer.log('Error updating meal with id $id', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   Future<void> deleteMeal(int id) async {
-    await _mealApi.deleteMeal(id);
+    try {
+      await _mealApi.deleteMeal(id);
+    } catch (e, stackTrace) {
+      developer.log('Error deleting meal with id $id', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   Future<Meal> toggleFavorite(int id, bool isFavorite) async {
-    final response = await _mealApi.toggleFavorite(id, isFavorite);
-    return MealMapper.fromMap(response.data);
+    try {
+      final response = await _mealApi.toggleFavorite(id, isFavorite);
+      return MealMapper.fromMap(response.data);
+    } catch (e, stackTrace) {
+      developer.log('Error toggling favorite for meal with id $id', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 }
