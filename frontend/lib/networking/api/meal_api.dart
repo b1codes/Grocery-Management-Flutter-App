@@ -3,30 +3,30 @@ import 'package:grocery_management_frontend/networking/extensions/dio_extension.
 
 class MealApi {
   final ApiClient _apiClient;
+Future<Response> getMeals() async {
+  return _apiClient.get('/api/meals/meals/');
+}
 
-  MealApi({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
+Future<Response> getMeal(int id) async {
+  return _apiClient.get('/api/meals/meals/$id/');
+}
 
-  Future<Response> getMeals() async {
-    return _apiClient.get('/api/meals/');
-  }
+Future<Response> createMeal(Map<String, dynamic> data) async {
+  return _apiClient.post('/api/meals/meals/', data: data);
+}
 
-  Future<Response> getMeal(int id) async {
-    return _apiClient.get('/api/meals/$id/');
-  }
+Future<Response> updateMeal(int id, Map<String, dynamic> data) async {
+  return _apiClient.patch('/api/meals/meals/$id/', data: data);
+}
 
-  Future<Response> createMeal(Map<String, dynamic> data) async {
-    return _apiClient.post('/api/meals/', data: data);
-  }
+Future<Response> deleteMeal(int id) async {
+  return _apiClient.delete('/api/meals/meals/$id/');
+}
 
-  Future<Response> updateMeal(int id, Map<String, dynamic> data) async {
-    return _apiClient.patch('/api/meals/$id/', data: data);
-  }
-
-  Future<Response> deleteMeal(int id) async {
-    return _apiClient.delete('/api/meals/$id/');
-  }
-
-  Future<Response> toggleFavorite(int id, bool isFavorite) async {
-    return _apiClient.patch('/api/meals/$id/', data: {'is_favorite': isFavorite});
-  }
+Future<Response> toggleFavorite(int id, bool isFavorite) async {
+  return _apiClient.patch(
+    '/api/meals/meals/$id/',
+    data: {'is_favorite': isFavorite},
+  );
+}
 }

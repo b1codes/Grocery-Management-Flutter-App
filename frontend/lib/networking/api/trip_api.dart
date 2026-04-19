@@ -7,18 +7,18 @@ class TripApi {
   TripApi({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
 
   Future<Response> startTrip(int storeId) async {
-    return _apiClient.post('/api/trips/', data: {'store': storeId});
+    return _apiClient.post('/api/grocery/grocery-trips/', data: {'store': storeId});
   }
 
   Future<Response> getTrips({Map<String, dynamic>? queryParameters}) async {
     return _apiClient.get(
-      '/api/trips/',
+      '/api/grocery/grocery-trips/',
       queryParameters: queryParameters ?? {},
     );
   }
 
   Future<Response> getTrip(int id) async {
-    return _apiClient.get('/api/trips/$id/');
+    return _apiClient.get('/api/grocery/grocery-trips/$id/');
   }
 
   Future<Response> addItemToTrip(
@@ -28,7 +28,7 @@ class TripApi {
     int quantity = 1,
   }) async {
     return _apiClient.post(
-      '/api/trips/$tripId/items/',
+      '/api/grocery/grocery-trips/$tripId/items/',
       data: {
         'pantry_item': pantryItemId,
         'purchase_price': price,
@@ -39,7 +39,7 @@ class TripApi {
 
   Future<Response> finishTrip(int tripId) async {
     return _apiClient.patch(
-      '/api/trips/$tripId/',
+      '/api/grocery/grocery-trips/$tripId/',
       data: {'status': 'completed'},
     );
   }

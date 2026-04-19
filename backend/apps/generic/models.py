@@ -5,6 +5,7 @@ from django.db.models import Q
 class Status(models.TextChoices):
     ACTIVE = 'active', 'Active'
     INACTIVE = 'inactive', 'Inactive'
+    COMPLETED = 'completed', 'Completed'
 
 class DefaultModelManager(models.Manager):
     def active(self):
