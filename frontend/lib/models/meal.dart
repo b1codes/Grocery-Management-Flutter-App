@@ -6,18 +6,18 @@ part 'meal.mapper.dart';
 @MappableClass(caseStyle: CaseStyle.snakeCase)
 class Meal with MealMappable {
   const Meal({
-    required this.id,
+    this.id,
     required this.name,
     this.description,
-    required this.user,
+    this.user,
     this.isFavorite = false,
-    required this.ingredients,
+    this.ingredients = const [],
   });
 
-  final int id;
+  final int? id;
   final String name;
   final String? description;
-  final int user;
+  final int? user;
   final bool isFavorite;
   final List<MealIngredient> ingredients;
 }
@@ -25,13 +25,13 @@ class Meal with MealMappable {
 @MappableClass(caseStyle: CaseStyle.snakeCase)
 class MealIngredient with MealIngredientMappable {
   const MealIngredient({
-    required this.id,
+    this.id,
     required this.pantryItemTemplate,
     required this.quantity,
     this.unit,
   });
 
-  final int id;
+  final int? id;
   final PantryItem pantryItemTemplate;
   final double quantity;
   final String? unit;

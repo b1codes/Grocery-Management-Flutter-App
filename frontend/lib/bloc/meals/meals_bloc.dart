@@ -33,10 +33,14 @@ class MealsBloc extends Bloc<MealsEvent, MealsState> {
   void _onAddMeal(AddMeal event, Emitter<MealsState> emit) async {
     try {
       final newMeal = await _mealManager.createMeal(
-        event.name,
+        name: event.name,
         description: event.description,
         isFavorite: event.isFavorite,
-        ingredients: event.ingredients,
+        ingredients: event.ingredients.map((i) => {
+          'pantry_item_template': i.pantryItemTemplate.id,
+          'quantity': i.quantity,
+          'unit': i.unit,
+        }).toList(),
       );
       final updatedMeals = List<Meal>.from(state.meals)..add(newMeal);
       emit(state.copyWith(status: MealsStatus.success, meals: updatedMeals));

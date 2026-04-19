@@ -5,6 +5,7 @@ import 'package:grocery_management_frontend/bloc/portal/portal_bloc.dart';
 import 'package:grocery_management_frontend/networking/extensions/dio_extension.dart';
 import 'package:grocery_management_frontend/services/managers/auth_manager.dart';
 import 'package:grocery_management_frontend/services/managers/budget_manager.dart';
+import 'package:grocery_management_frontend/services/managers/meal_manager.dart';
 import 'package:grocery_management_frontend/services/managers/pantry_manager.dart';
 import 'package:grocery_management_frontend/services/managers/store_manager.dart';
 import 'package:grocery_management_frontend/services/managers/trip_manager.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(create: (context) => AuthManager()),
         RepositoryProvider(create: (context) => PantryManager()),
+        RepositoryProvider(create: (context) => MealManager()),
         RepositoryProvider(create: (context) => StoreManager()),
         RepositoryProvider(create: (context) => TripManager()),
         RepositoryProvider(create: (context) => BudgetManager()),

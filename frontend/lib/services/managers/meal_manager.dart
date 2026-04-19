@@ -31,12 +31,14 @@ class MealManager {
   Future<Meal> createMeal({
     required String name,
     String? description,
+    bool isFavorite = false,
     required List<Map<String, dynamic>> ingredients,
   }) async {
     try {
       final response = await _mealApi.createMeal({
         'name': name,
         'description': description,
+        'is_favorite': isFavorite,
         'ingredients': ingredients,
       });
       return MealMapper.fromMap(response.data);
