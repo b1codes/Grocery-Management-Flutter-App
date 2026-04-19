@@ -3,6 +3,9 @@ import 'package:grocery_management_frontend/networking/extensions/dio_extension.
 
 class MealApi {
   final ApiClient _apiClient;
+
+  MealApi({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
+
 Future<Response> getMeals() async {
   return _apiClient.get('/api/meals/meals/');
 }

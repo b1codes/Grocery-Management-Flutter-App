@@ -15,14 +15,12 @@ class MealManager {
   Future<void> cookMeal(Meal meal) async {
     try {
       for (final ingredient in meal.ingredients) {
-        if (ingredient.pantryItemTemplate != null) {
-          final item = ingredient.pantryItemTemplate!;
-          final newQuantity = (item.quantity - ingredient.quantity).toInt();
-          await _pantryManager.updatePantryItemQuantity(
-            item.id!,
-            newQuantity > 0 ? newQuantity : 0,
-          );
-        }
+        final item = ingredient.pantryItemTemplate;
+        final newQuantity = (item.quantity - ingredient.quantity).toInt();
+        await _pantryManager.updatePantryItemQuantity(
+          item.id,
+          newQuantity > 0 ? newQuantity : 0,
+        );
       }
     } catch (e, stackTrace) {
       developer.log('Error cooking meal', error: e, stackTrace: stackTrace);

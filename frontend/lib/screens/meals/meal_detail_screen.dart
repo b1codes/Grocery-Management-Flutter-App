@@ -43,7 +43,7 @@ class MealDetailScreen extends StatelessWidget {
               const SizedBox(height: 32),
               if (hasActiveTrip) ...[
                 ElevatedButton.icon(
-                  onPressed: () => _addToTrip(context, tripState.trip!.id!),
+                  onPressed: () => _addToTrip(context, tripState.trip!.id),
                   icon: const Icon(Icons.add_shopping_cart),
                   label: const Text('Add to Current Trip'),
                   style: ElevatedButton.styleFrom(

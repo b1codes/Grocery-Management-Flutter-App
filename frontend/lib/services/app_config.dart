@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 
 class AppConfig {
@@ -11,7 +12,7 @@ class AppConfig {
       _config = json.decode(configString);
       baseUrl = _config['BASE_URL'] ?? '';
     } catch (e) {
-      print('Warning: Could not load config for $env. Using defaults.');
+      debugPrint('Warning: Could not load config for $env. Using defaults.');
       // Initialize with defaults if needed
     }
   }

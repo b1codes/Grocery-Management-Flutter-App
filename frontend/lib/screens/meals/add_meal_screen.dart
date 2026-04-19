@@ -68,7 +68,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
               final ingredient = entry.value;
               return Card(
                 child: ListTile(
-                  title: Text(ingredient.pantryItemTemplate?.name ?? 'Unknown Item'),
+                  title: Text(ingredient.pantryItemTemplate.name),
                   subtitle: Text('${ingredient.quantity} ${ingredient.unit ?? ""}'),
                   trailing: IconButton(
                     icon: const Icon(Icons.remove_circle_outline),
@@ -76,7 +76,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

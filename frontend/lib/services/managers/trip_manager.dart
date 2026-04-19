@@ -1,3 +1,4 @@
+import 'package:grocery_management_frontend/models/meal.dart';
 import 'package:grocery_management_frontend/models/grocery_trip.dart';
 import 'package:grocery_management_frontend/models/purchased_item.dart';
 import 'package:grocery_management_frontend/networking/api/trip_api.dart';
@@ -65,14 +66,12 @@ class TripManager {
 
   Future<void> addMealToTrip(int tripId, Meal meal) async {
     for (final ingredient in meal.ingredients) {
-      if (ingredient.pantryItemTemplate != null) {
-        await addItemToTrip(
-          tripId,
-          ingredient.pantryItemTemplate!.id!,
-          ingredient.pantryItemTemplate!.regularPrice,
-          quantity: ingredient.quantity.toInt(),
-        );
-      }
+      await addItemToTrip(
+        tripId,
+        ingredient.pantryItemTemplate.id,
+        ingredient.pantryItemTemplate.regularPrice,
+        quantity: ingredient.quantity.toInt(),
+      );
     }
   }
 

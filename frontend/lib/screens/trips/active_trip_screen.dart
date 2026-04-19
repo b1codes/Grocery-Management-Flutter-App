@@ -93,6 +93,7 @@ class ActiveTripView extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () async {
+            final tripBloc = context.read<TripBloc>();
             final pantryItem = await Navigator.of(context).push<PantryItem>(
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
@@ -105,9 +106,7 @@ class ActiveTripView extends StatelessWidget {
             if (pantryItem != null && context.mounted) {
               final price = await _showAddItemDialog(context, pantryItem);
               if (price != null) {
-                context
-                    .read<TripBloc>()
-                    .add(AddItemToTrip(pantryItemId: pantryItem.id, price: price));
+                tripBloc.add(AddItemToTrip(pantryItemId: pantryItem.id, price: price));
               }
             }
           },
