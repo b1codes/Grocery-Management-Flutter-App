@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.budget',
     'apps.generic',
     'apps.utils',
+    'apps.meals',
 ]
 
 MIDDLEWARE = [
