@@ -1,4 +1,9 @@
-class PantryItem {
+import 'package:dart_mappable/dart_mappable.dart';
+
+part 'pantry_item.mapper.dart';
+
+@MappableClass(caseStyle: CaseStyle.snakeCase)
+class PantryItem with PantryItemMappable {
   const PantryItem({
     required this.id,
     required this.name,
