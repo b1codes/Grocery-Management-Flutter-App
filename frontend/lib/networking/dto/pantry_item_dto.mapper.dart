@@ -55,6 +55,14 @@ class PantryItemDtoMapper extends ClassMapperBase<PantryItemDto> {
     'quantity',
     _$quantity,
   );
+  static int _$minThreshold(PantryItemDto v) => v.minThreshold;
+  static const Field<PantryItemDto, int> _f$minThreshold = Field(
+    'minThreshold',
+    _$minThreshold,
+    key: r'min_threshold',
+    opt: true,
+    def: 1,
+  );
   static double _$regularPrice(PantryItemDto v) => v.regularPrice;
   static const Field<PantryItemDto, double> _f$regularPrice = Field(
     'regularPrice',
@@ -111,6 +119,7 @@ class PantryItemDtoMapper extends ClassMapperBase<PantryItemDto> {
     #name: _f$name,
     #category: _f$category,
     #quantity: _f$quantity,
+    #minThreshold: _f$minThreshold,
     #regularPrice: _f$regularPrice,
     #lastUpdated: _f$lastUpdated,
     #upc: _f$upc,
@@ -130,6 +139,7 @@ class PantryItemDtoMapper extends ClassMapperBase<PantryItemDto> {
       name: data.dec(_f$name),
       category: data.dec(_f$category),
       quantity: data.dec(_f$quantity),
+      minThreshold: data.dec(_f$minThreshold),
       regularPrice: data.dec(_f$regularPrice),
       lastUpdated: data.dec(_f$lastUpdated),
       upc: data.dec(_f$upc),
@@ -211,6 +221,7 @@ abstract class PantryItemDtoCopyWith<$R, $In extends PantryItemDto, $Out>
     String? name,
     int? category,
     int? quantity,
+    int? minThreshold,
     double? regularPrice,
     DateTime? lastUpdated,
     String? upc,
@@ -240,6 +251,7 @@ class _PantryItemDtoCopyWithImpl<$R, $Out>
     String? name,
     Object? category = $none,
     int? quantity,
+    int? minThreshold,
     double? regularPrice,
     DateTime? lastUpdated,
     Object? upc = $none,
@@ -257,6 +269,7 @@ class _PantryItemDtoCopyWithImpl<$R, $Out>
       if (name != null) #name: name,
       if (category != $none) #category: category,
       if (quantity != null) #quantity: quantity,
+      if (minThreshold != null) #minThreshold: minThreshold,
       if (regularPrice != null) #regularPrice: regularPrice,
       if (lastUpdated != null) #lastUpdated: lastUpdated,
       if (upc != $none) #upc: upc,
@@ -276,6 +289,7 @@ class _PantryItemDtoCopyWithImpl<$R, $Out>
     name: data.get(#name, or: $value.name),
     category: data.get(#category, or: $value.category),
     quantity: data.get(#quantity, or: $value.quantity),
+    minThreshold: data.get(#minThreshold, or: $value.minThreshold),
     regularPrice: data.get(#regularPrice, or: $value.regularPrice),
     lastUpdated: data.get(#lastUpdated, or: $value.lastUpdated),
     upc: data.get(#upc, or: $value.upc),

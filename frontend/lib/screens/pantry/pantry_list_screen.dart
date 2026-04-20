@@ -70,9 +70,11 @@ class PantryListScreen extends StatelessWidget {
   void _showAddPantryItemDialog(BuildContext context) {
     final nameController = TextEditingController();
     final quantityController = TextEditingController();
+    final minThresholdController = TextEditingController(text: '1');
     int? selectedCategoryId;
     final formKey = GlobalKey<FormState>();
-    final List<Category> categories = context.read<PantryBloc>().state.categories;
+    final List<Category> categories =
+        context.read<PantryBloc>().state.categories;
 
     showDialog(
       context: context,
@@ -98,6 +100,21 @@ class PantryListScreen extends StatelessWidget {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a quantity';
+                      }
+                      if (int.tryParse(value) == null) {
+                        return 'Please enter a valid number';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: minThresholdController,
+                    decoration:
+                        const InputDecoration(labelText: 'Low Stock Threshold'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a threshold';
                       }
                       if (int.tryParse(value) == null) {
                         return 'Please enter a valid number';
@@ -137,6 +154,8 @@ class PantryListScreen extends StatelessWidget {
                           AddPantryItem(
                             name: nameController.text,
                             quantity: int.parse(quantityController.text),
+                            minThreshold:
+                                int.parse(minThresholdController.text),
                             categoryId: selectedCategoryId!,
                           ),
                         );

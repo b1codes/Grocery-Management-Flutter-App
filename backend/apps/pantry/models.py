@@ -35,6 +35,7 @@ class PantryItem(DefaultModel):
     quantity = models.PositiveIntegerField(default=0, help_text="Current quantity in the pantry.")
     regular_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="The typical, non-discounted price.")
     last_updated = models.DateTimeField(auto_now=True)
+    min_threshold = models.PositiveIntegerField(default=1, help_text="Notify when quantity drops below this.")
     
     # Fields to be populated by the UPC API
     upc = models.CharField(max_length=50, blank=True, null=True, unique=True)

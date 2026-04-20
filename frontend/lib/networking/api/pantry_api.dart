@@ -17,22 +17,35 @@ class PantryApi {
   Future<Response> createPantryItem(
     String name,
     int quantity,
-    int categoryId,
-  ) async {
+    int categoryId, {
+    int minThreshold = 1,
+  }) async {
     return _apiClient.post(
       '/api/pantry/pantry-items/',
-      data: {'name': name, 'quantity': quantity, 'category': categoryId},
+      data: {
+        'name': name,
+        'quantity': quantity,
+        'category': categoryId,
+        'min_threshold': minThreshold,
+      },
     );
   }
 
   Future<Response> updatePantryItem(
-    int id,
-    String name,
+    int id, {
+    String? name,
     int? categoryId,
-  ) async {
+    int? minThreshold,
+    int? quantity,
+  }) async {
     return _apiClient.patch(
       '/api/pantry/pantry-items/$id/',
-      data: {'name': name, if (categoryId != null) 'category': categoryId},
+      data: {
+        if (name != null) 'name': name,
+        if (categoryId != null) 'category': categoryId,
+        if (minThreshold != null) 'min_threshold': minThreshold,
+        if (quantity != null) 'quantity': quantity,
+      },
     );
   }
 

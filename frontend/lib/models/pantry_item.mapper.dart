@@ -36,6 +36,14 @@ class PantryItemMapper extends ClassMapperBase<PantryItem> {
     'quantity',
     _$quantity,
   );
+  static int _$minThreshold(PantryItem v) => v.minThreshold;
+  static const Field<PantryItem, int> _f$minThreshold = Field(
+    'minThreshold',
+    _$minThreshold,
+    key: r'min_threshold',
+    opt: true,
+    def: 1,
+  );
   static double _$regularPrice(PantryItem v) => v.regularPrice;
   static const Field<PantryItem, double> _f$regularPrice = Field(
     'regularPrice',
@@ -88,6 +96,7 @@ class PantryItemMapper extends ClassMapperBase<PantryItem> {
     #name: _f$name,
     #category: _f$category,
     #quantity: _f$quantity,
+    #minThreshold: _f$minThreshold,
     #regularPrice: _f$regularPrice,
     #lastUpdated: _f$lastUpdated,
     #upc: _f$upc,
@@ -103,6 +112,7 @@ class PantryItemMapper extends ClassMapperBase<PantryItem> {
       name: data.dec(_f$name),
       category: data.dec(_f$category),
       quantity: data.dec(_f$quantity),
+      minThreshold: data.dec(_f$minThreshold),
       regularPrice: data.dec(_f$regularPrice),
       lastUpdated: data.dec(_f$lastUpdated),
       upc: data.dec(_f$upc),
@@ -178,6 +188,7 @@ abstract class PantryItemCopyWith<$R, $In extends PantryItem, $Out>
     String? name,
     int? category,
     int? quantity,
+    int? minThreshold,
     double? regularPrice,
     DateTime? lastUpdated,
     String? upc,
@@ -203,6 +214,7 @@ class _PantryItemCopyWithImpl<$R, $Out>
     String? name,
     Object? category = $none,
     int? quantity,
+    int? minThreshold,
     double? regularPrice,
     DateTime? lastUpdated,
     Object? upc = $none,
@@ -216,6 +228,7 @@ class _PantryItemCopyWithImpl<$R, $Out>
       if (name != null) #name: name,
       if (category != $none) #category: category,
       if (quantity != null) #quantity: quantity,
+      if (minThreshold != null) #minThreshold: minThreshold,
       if (regularPrice != null) #regularPrice: regularPrice,
       if (lastUpdated != null) #lastUpdated: lastUpdated,
       if (upc != $none) #upc: upc,
@@ -231,6 +244,7 @@ class _PantryItemCopyWithImpl<$R, $Out>
     name: data.get(#name, or: $value.name),
     category: data.get(#category, or: $value.category),
     quantity: data.get(#quantity, or: $value.quantity),
+    minThreshold: data.get(#minThreshold, or: $value.minThreshold),
     regularPrice: data.get(#regularPrice, or: $value.regularPrice),
     lastUpdated: data.get(#lastUpdated, or: $value.lastUpdated),
     upc: data.get(#upc, or: $value.upc),

@@ -28,31 +28,39 @@ class PantryManager {
   Future<PantryItem> createPantryItem(
     String name,
     int quantity,
-    int categoryId,
-  ) async {
+    int categoryId, {
+    int minThreshold = 1,
+  }) async {
     final response = await _pantryApi.createPantryItem(
       name,
       quantity,
       categoryId,
+      minThreshold: minThreshold,
     );
     final pantryItemDto = PantryItemDto.fromMap(response.data);
     return pantryItemDto.toPantryItem();
   }
 
-  Future<PantryItem> updatePantryItem(
-    int id,
-    String name,
+  Future<PantryItem> updatePantryItem({
+    required int id,
+    String? name,
     int? categoryId,
-  ) async {
-    final response = await _pantryApi.updatePantryItem(id, name, categoryId);
+    int? minThreshold,
+    int? quantity,
+  }) async {
+    final response = await _pantryApi.updatePantryItem(
+      id,
+      name: name,
+      categoryId: categoryId,
+      minThreshold: minThreshold,
+      quantity: quantity,
+    );
     final pantryItemDto = PantryItemDto.fromMap(response.data);
     return pantryItemDto.toPantryItem();
   }
 
   Future<PantryItem> updatePantryItemQuantity(int id, int quantity) async {
-    final response = await _pantryApi.updatePantryItemQuantity(id, quantity);
-    final pantryItemDto = PantryItemDto.fromMap(response.data);
-    return pantryItemDto.toPantryItem();
+    return updatePantryItem(id: id, quantity: quantity);
   }
 
   Future<void> deletePantryItem(int id) async {
@@ -66,6 +74,7 @@ extension on PantryItemDto {
       id: id,
       name: name,
       quantity: quantity,
+      minThreshold: minThreshold,
       category: category,
       lastUpdated: lastUpdated,
       regularPrice: regularPrice,

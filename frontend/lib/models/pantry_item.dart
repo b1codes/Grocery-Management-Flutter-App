@@ -9,6 +9,7 @@ class PantryItem with PantryItemMappable {
     required this.name,
     this.category,
     required this.quantity,
+    this.minThreshold = 1,
     required this.regularPrice,
     required this.lastUpdated,
     this.upc,
@@ -22,6 +23,7 @@ class PantryItem with PantryItemMappable {
   final String name;
   final int? category;
   final int quantity;
+  final int minThreshold;
   final double regularPrice;
   final DateTime lastUpdated;
   final String? upc;
