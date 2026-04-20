@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:grocery_management_frontend/networking/dto/address_dto.dart';
 
 part 'store_dto.mapper.dart';
 
@@ -23,7 +24,7 @@ class StoreDto with StoreDtoMappable {
   final DateTime updatedAt;
   final int user;
   final String name;
-  final String? address;
+  final AddressDto? address;
   final int tripCount;
   final int? createdBy;
   final int? updatedBy;

@@ -10,10 +10,25 @@ class StoreApi {
     return _apiClient.get('/api/stores/');
   }
 
-  Future<Response> createStore(String name, String address) async {
+  Future<Response> createStore(
+    String name,
+    String address,
+    String city,
+    String state,
+    String zipCode,
+  ) async {
     return _apiClient.post(
       '/api/stores/',
-      data: {'name': name, 'address': address},
+      data: {
+        'name': name,
+        'address': {
+          'address_line': address,
+          'city': city,
+          'state': state,
+          'zip_code': zipCode,
+          'country': 'USA',
+        }
+      },
     );
   }
 }

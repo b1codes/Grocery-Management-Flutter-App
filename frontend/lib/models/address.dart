@@ -1,4 +1,9 @@
-class Address {
+import 'package:dart_mappable/dart_mappable.dart';
+
+part 'address.mapper.dart';
+
+@MappableClass(caseStyle: CaseStyle.snakeCase)
+class Address with AddressMappable {
   const Address({
     required this.id,
     required this.addressLine,

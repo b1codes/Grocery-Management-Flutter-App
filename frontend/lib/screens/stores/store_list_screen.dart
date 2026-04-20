@@ -28,7 +28,7 @@ class StoreListScreen extends StatelessWidget {
               final store = state.stores[index];
               return ListTile(
                 title: Text(store.name),
-                subtitle: Text(store.address ?? 'No address'),
+                subtitle: Text(store.address?.addressLine ?? 'No address'),
                 trailing: Text('${store.tripCount} trips'),
               );
             },
@@ -46,7 +46,10 @@ class StoreListScreen extends StatelessWidget {
 
   void _showAddStoreDialog(BuildContext context) {
     final nameController = TextEditingController();
-    final addressController = TextEditingController();
+    final addressLineController = TextEditingController();
+    final cityController = TextEditingController();
+    final stateController = TextEditingController();
+    final zipCodeController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -56,20 +59,34 @@ class StoreListScreen extends StatelessWidget {
           title: const Text('Add Store'),
           content: Form(
             key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a name' : null,
-                ),
-                TextFormField(
-                  controller: addressController,
-                  decoration: const InputDecoration(labelText: 'Address'),
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: nameController,
+                    decoration: const InputDecoration(labelText: 'Name'),
+                    validator: (value) =>
+                        value!.isEmpty ? 'Please enter a name' : null,
+                  ),
+                  TextFormField(
+                    controller: addressLineController,
+                    decoration: const InputDecoration(labelText: 'Address Line'),
+                  ),
+                  TextFormField(
+                    controller: cityController,
+                    decoration: const InputDecoration(labelText: 'City'),
+                  ),
+                  TextFormField(
+                    controller: stateController,
+                    decoration: const InputDecoration(labelText: 'State'),
+                  ),
+                  TextFormField(
+                    controller: zipCodeController,
+                    decoration: const InputDecoration(labelText: 'Zip Code'),
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -83,7 +100,10 @@ class StoreListScreen extends StatelessWidget {
                   context.read<StoreBloc>().add(
                         AddStore(
                           name: nameController.text,
-                          address: addressController.text,
+                          address: addressLineController.text,
+                          city: cityController.text,
+                          state: stateController.text,
+                          zipCode: zipCodeController.text,
                         ),
                       );
                   Navigator.of(dialogContext).pop();

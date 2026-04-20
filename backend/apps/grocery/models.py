@@ -1,4 +1,4 @@
-from apps.generic.models import DefaultModel
+from apps.generic.models import DefaultModel, Address
 from django.db import models
 from django.conf import settings
 from apps.pantry.models import PantryItem
@@ -10,7 +10,14 @@ class Store(DefaultModel):
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    address = models.TextField(blank=True, null=True, help_text="Optional address of the store.")
+    address = models.ForeignKey(
+        Address,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="Optional address of the store.",
+        related_name='stores'
+    )
     trip_count = models.PositiveIntegerField(default=0, help_text="Automatically incremented count of trips to this store.")
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,

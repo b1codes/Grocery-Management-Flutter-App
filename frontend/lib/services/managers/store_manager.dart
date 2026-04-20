@@ -15,8 +15,20 @@ class StoreManager {
     return storeDtos.map((dto) => dto.toStore()).toList();
   }
 
-  Future<Store> createStore(String name, String address) async {
-    final response = await _storeApi.createStore(name, address);
+  Future<Store> createStore(
+    String name,
+    String address,
+    String city,
+    String state,
+    String zipCode,
+  ) async {
+    final response = await _storeApi.createStore(
+      name,
+      address,
+      city,
+      state,
+      zipCode,
+    );
     final storeDto = StoreDto.fromMap(response.data);
     return storeDto.toStore();
   }
@@ -24,6 +36,13 @@ class StoreManager {
 
 extension on StoreDto {
   Store toStore() {
-    return Store(id: id, name: name, address: address, tripCount: tripCount);
+    return Store(
+      id: id,
+      name: name,
+      address: address?.toAddress(),
+      tripCount: tripCount,
+      createdBy: createdBy,
+      updatedBy: updatedBy,
+    );
   }
 }

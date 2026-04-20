@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:grocery_management_frontend/models/address.dart';
 
 part 'address_dto.mapper.dart';
 
@@ -29,6 +30,19 @@ class AddressDto with AddressDtoMappable {
   final String country;
   final int? createdBy;
   final int? updatedBy;
+
+  Address toAddress() {
+    return Address(
+      id: id,
+      addressLine: addressLine,
+      city: city,
+      state: state,
+      zipCode: zipCode,
+      country: country,
+      createdBy: createdBy,
+      updatedBy: updatedBy,
+    );
+  }
 
   static const fromMap = AddressDtoMapper.fromMap;
   static const fromJson = AddressDtoMapper.fromJson;

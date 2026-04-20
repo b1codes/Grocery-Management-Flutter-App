@@ -33,6 +33,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final newStore = await _storeManager.createStore(
         event.name,
         event.address,
+        event.city,
+        event.state,
+        event.zipCode,
       );
       final updatedStores = List<Store>.from(state.stores)..add(newStore);
       emit(state.copyWith(status: StoreStatus.success, stores: updatedStores));

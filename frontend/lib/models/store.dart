@@ -1,4 +1,10 @@
-class Store {
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:grocery_management_frontend/models/address.dart';
+
+part 'store.mapper.dart';
+
+@MappableClass(caseStyle: CaseStyle.snakeCase)
+class Store with StoreMappable {
   const Store({
     required this.id,
     required this.name,
@@ -10,7 +16,7 @@ class Store {
 
   final int id;
   final String name;
-  final String? address;
+  final Address? address;
   final int tripCount;
   final int? createdBy;
   final int? updatedBy;

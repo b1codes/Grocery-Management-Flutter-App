@@ -14,6 +14,7 @@ class StoreDtoMapper extends ClassMapperBase<StoreDto> {
   static StoreDtoMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = StoreDtoMapper._());
+      AddressDtoMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -41,8 +42,8 @@ class StoreDtoMapper extends ClassMapperBase<StoreDto> {
   static const Field<StoreDto, int> _f$user = Field('user', _$user);
   static String _$name(StoreDto v) => v.name;
   static const Field<StoreDto, String> _f$name = Field('name', _$name);
-  static String? _$address(StoreDto v) => v.address;
-  static const Field<StoreDto, String> _f$address = Field(
+  static AddressDto? _$address(StoreDto v) => v.address;
+  static const Field<StoreDto, AddressDto> _f$address = Field(
     'address',
     _$address,
     opt: true,
@@ -154,6 +155,7 @@ extension StoreDtoValueCopy<$R, $Out> on ObjectCopyWith<$R, StoreDto, $Out> {
 
 abstract class StoreDtoCopyWith<$R, $In extends StoreDto, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  AddressDtoCopyWith<$R, AddressDto, AddressDto>? get address;
   $R call({
     int? id,
     String? status,
@@ -161,7 +163,7 @@ abstract class StoreDtoCopyWith<$R, $In extends StoreDto, $Out>
     DateTime? updatedAt,
     int? user,
     String? name,
-    String? address,
+    AddressDto? address,
     int? tripCount,
     int? createdBy,
     int? updatedBy,
@@ -177,6 +179,9 @@ class _StoreDtoCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<StoreDto> $mapper =
       StoreDtoMapper.ensureInitialized();
+  @override
+  AddressDtoCopyWith<$R, AddressDto, AddressDto>? get address =>
+      $value.address?.copyWith.$chain((v) => call(address: v));
   @override
   $R call({
     int? id,
