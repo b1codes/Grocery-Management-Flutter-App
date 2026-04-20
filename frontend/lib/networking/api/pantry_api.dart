@@ -7,7 +7,11 @@ class PantryApi {
   PantryApi({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
 
   Future<Response> getPantryItems() async {
-    return _apiClient.get('/api/pantry/');
+    return _apiClient.get('/api/pantry/pantry-items/');
+  }
+
+  Future<Response> getCategories() async {
+    return _apiClient.get('/api/pantry/categories/');
   }
 
   Future<Response> createPantryItem(
@@ -16,7 +20,7 @@ class PantryApi {
     int categoryId,
   ) async {
     return _apiClient.post(
-      '/api/pantry/',
+      '/api/pantry/pantry-items/',
       data: {'name': name, 'quantity': quantity, 'category': categoryId},
     );
   }
@@ -27,16 +31,16 @@ class PantryApi {
     int? categoryId,
   ) async {
     return _apiClient.patch(
-      '/api/pantry/$id/',
+      '/api/pantry/pantry-items/$id/',
       data: {'name': name, if (categoryId != null) 'category': categoryId},
     );
   }
 
   Future<Response> updatePantryItemQuantity(int id, int quantity) async {
-    return _apiClient.patch('/api/pantry/$id/', data: {'quantity': quantity});
+    return _apiClient.patch('/api/pantry/pantry-items/$id/', data: {'quantity': quantity});
   }
 
   Future<Response> deletePantryItem(int id) async {
-    return _apiClient.delete('/api/pantry/$id/');
+    return _apiClient.delete('/api/pantry/pantry-items/$id/');
   }
 }

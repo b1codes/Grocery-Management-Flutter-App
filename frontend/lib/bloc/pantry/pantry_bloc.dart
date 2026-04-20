@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/models/pantry_item.dart';
+import 'package:grocery_management_frontend/models/category.dart';
 import 'package:grocery_management_frontend/services/managers/pantry_manager.dart';
 
 import 'pantry_event.dart';
@@ -15,9 +16,11 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> {
     : _pantryManager = pantryManager,
       super(const PantryState()) {
     on<FetchPantryItems>(_onFetchPantryItems);
+    on<FetchCategories>(_onFetchCategories);
     on<AddPantryItem>(_onAddPantryItem);
     on<UpdatePantryItem>(_onUpdatePantryItem);
     on<DeletePantryItem>(_onDeletePantryItem);
+    on<SetCategoryFilter>(_onSetCategoryFilter);
   }
 
   void _onFetchPantryItems(
@@ -26,11 +29,41 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> {
   ) async {
     emit(state.copyWith(status: PantryStatus.loading));
     try {
-      final items = await _pantryManager.getPantryItems();
-      emit(state.copyWith(status: PantryStatus.success, items: items));
+      final itemsFuture = _pantryManager.getPantryItems();
+      final categoriesFuture = _pantryManager.getCategories();
+      
+      final results = await Future.wait([itemsFuture, categoriesFuture]);
+      
+      emit(state.copyWith(
+        status: PantryStatus.success,
+        items: results[0] as List<PantryItem>,
+        categories: results[1] as List<Category>,
+      ));
     } catch (e) {
       emit(state.copyWith(status: PantryStatus.failure));
     }
+  }
+
+  void _onFetchCategories(
+    FetchCategories event,
+    Emitter<PantryState> emit,
+  ) async {
+    try {
+      final categories = await _pantryManager.getCategories();
+      emit(state.copyWith(categories: categories));
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  void _onSetCategoryFilter(
+    SetCategoryFilter event,
+    Emitter<PantryState> emit,
+  ) {
+    emit(state.copyWith(
+      selectedCategoryId: event.categoryId,
+      clearCategoryFilter: event.categoryId == null,
+    ));
   }
 
   void _onAddPantryItem(AddPantryItem event, Emitter<PantryState> emit) async {

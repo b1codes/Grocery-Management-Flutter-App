@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:grocery_management_frontend/models/category.dart';
 
 part 'category_dto.mapper.dart';
 
@@ -23,6 +24,16 @@ class CategoryDto with CategoryDtoMappable {
   final String? description;
   final int? createdBy;
   final int? updatedBy;
+
+  Category toCategory() {
+    return Category(
+      id: id,
+      name: name,
+      description: description,
+      createdBy: createdBy,
+      updatedBy: updatedBy,
+    );
+  }
 
   static const fromMap = CategoryDtoMapper.fromMap;
   static const fromJson = CategoryDtoMapper.fromJson;

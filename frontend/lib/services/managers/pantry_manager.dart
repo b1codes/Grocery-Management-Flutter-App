@@ -1,6 +1,8 @@
 import 'package:grocery_management_frontend/models/pantry_item.dart';
+import 'package:grocery_management_frontend/models/category.dart';
 import 'package:grocery_management_frontend/networking/api/pantry_api.dart';
 import 'package:grocery_management_frontend/networking/dto/pantry_item_dto.dart';
+import 'package:grocery_management_frontend/networking/dto/category_dto.dart';
 
 class PantryManager {
   final PantryApi _pantryApi;
@@ -13,6 +15,14 @@ class PantryManager {
         .map((e) => PantryItemDto.fromMap(e))
         .toList();
     return pantryItemDtos.map((dto) => dto.toPantryItem()).toList();
+  }
+
+  Future<List<Category>> getCategories() async {
+    final response = await _pantryApi.getCategories();
+    final categoryDtos = (response.data as List)
+        .map((e) => CategoryDto.fromMap(e))
+        .toList();
+    return categoryDtos.map((dto) => dto.toCategory()).toList();
   }
 
   Future<PantryItem> createPantryItem(
