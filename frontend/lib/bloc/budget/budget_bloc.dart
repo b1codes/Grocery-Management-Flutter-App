@@ -24,7 +24,15 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         event.year,
         event.month,
       );
-      emit(state.copyWith(status: BudgetStatus.success, budget: budget));
+      final stats = await _budgetManager.getBudgetStats(
+        event.year,
+        event.month,
+      );
+      emit(state.copyWith(
+        status: BudgetStatus.success,
+        budget: budget,
+        stats: stats,
+      ));
     } catch (e) {
       emit(state.copyWith(status: BudgetStatus.failure));
     }
@@ -37,7 +45,15 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         event.month,
         event.amount,
       );
-      emit(state.copyWith(status: BudgetStatus.success, budget: budget));
+      final stats = await _budgetManager.getBudgetStats(
+        event.year,
+        event.month,
+      );
+      emit(state.copyWith(
+        status: BudgetStatus.success,
+        budget: budget,
+        stats: stats,
+      ));
     } catch (e) {
       // Handle error
     }
