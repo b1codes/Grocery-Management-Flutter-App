@@ -50,18 +50,25 @@ class PantryItemDtoMapper extends ClassMapperBase<PantryItemDto> {
     _$category,
     opt: true,
   );
-  static int _$quantity(PantryItemDto v) => v.quantity;
-  static const Field<PantryItemDto, int> _f$quantity = Field(
+  static double _$quantity(PantryItemDto v) => v.quantity;
+  static const Field<PantryItemDto, double> _f$quantity = Field(
     'quantity',
     _$quantity,
   );
-  static int _$minThreshold(PantryItemDto v) => v.minThreshold;
-  static const Field<PantryItemDto, int> _f$minThreshold = Field(
+  static String _$unit(PantryItemDto v) => v.unit;
+  static const Field<PantryItemDto, String> _f$unit = Field(
+    'unit',
+    _$unit,
+    opt: true,
+    def: 'count',
+  );
+  static double _$minThreshold(PantryItemDto v) => v.minThreshold;
+  static const Field<PantryItemDto, double> _f$minThreshold = Field(
     'minThreshold',
     _$minThreshold,
     key: r'min_threshold',
     opt: true,
-    def: 1,
+    def: 1.0,
   );
   static double _$regularPrice(PantryItemDto v) => v.regularPrice;
   static const Field<PantryItemDto, double> _f$regularPrice = Field(
@@ -119,6 +126,7 @@ class PantryItemDtoMapper extends ClassMapperBase<PantryItemDto> {
     #name: _f$name,
     #category: _f$category,
     #quantity: _f$quantity,
+    #unit: _f$unit,
     #minThreshold: _f$minThreshold,
     #regularPrice: _f$regularPrice,
     #lastUpdated: _f$lastUpdated,
@@ -139,6 +147,7 @@ class PantryItemDtoMapper extends ClassMapperBase<PantryItemDto> {
       name: data.dec(_f$name),
       category: data.dec(_f$category),
       quantity: data.dec(_f$quantity),
+      unit: data.dec(_f$unit),
       minThreshold: data.dec(_f$minThreshold),
       regularPrice: data.dec(_f$regularPrice),
       lastUpdated: data.dec(_f$lastUpdated),
@@ -220,8 +229,9 @@ abstract class PantryItemDtoCopyWith<$R, $In extends PantryItemDto, $Out>
     int? user,
     String? name,
     int? category,
-    int? quantity,
-    int? minThreshold,
+    double? quantity,
+    String? unit,
+    double? minThreshold,
     double? regularPrice,
     DateTime? lastUpdated,
     String? upc,
@@ -250,8 +260,9 @@ class _PantryItemDtoCopyWithImpl<$R, $Out>
     int? user,
     String? name,
     Object? category = $none,
-    int? quantity,
-    int? minThreshold,
+    double? quantity,
+    String? unit,
+    double? minThreshold,
     double? regularPrice,
     DateTime? lastUpdated,
     Object? upc = $none,
@@ -269,6 +280,7 @@ class _PantryItemDtoCopyWithImpl<$R, $Out>
       if (name != null) #name: name,
       if (category != $none) #category: category,
       if (quantity != null) #quantity: quantity,
+      if (unit != null) #unit: unit,
       if (minThreshold != null) #minThreshold: minThreshold,
       if (regularPrice != null) #regularPrice: regularPrice,
       if (lastUpdated != null) #lastUpdated: lastUpdated,
@@ -289,6 +301,7 @@ class _PantryItemDtoCopyWithImpl<$R, $Out>
     name: data.get(#name, or: $value.name),
     category: data.get(#category, or: $value.category),
     quantity: data.get(#quantity, or: $value.quantity),
+    unit: data.get(#unit, or: $value.unit),
     minThreshold: data.get(#minThreshold, or: $value.minThreshold),
     regularPrice: data.get(#regularPrice, or: $value.regularPrice),
     lastUpdated: data.get(#lastUpdated, or: $value.lastUpdated),

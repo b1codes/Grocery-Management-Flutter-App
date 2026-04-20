@@ -72,9 +72,20 @@ class PantryListScreen extends StatelessWidget {
     final quantityController = TextEditingController();
     final minThresholdController = TextEditingController(text: '1');
     int? selectedCategoryId;
+    String selectedUnit = 'count';
     final formKey = GlobalKey<FormState>();
     final List<Category> categories =
         context.read<PantryBloc>().state.categories;
+
+    final unitChoices = [
+      {'value': 'count', 'label': 'Count'},
+      {'value': 'kg', 'label': 'Kilograms'},
+      {'value': 'g', 'label': 'Grams'},
+      {'value': 'lb', 'label': 'Pounds'},
+      {'value': 'oz', 'label': 'Ounces'},
+      {'value': 'l', 'label': 'Liters'},
+      {'value': 'ml', 'label': 'Milliliters'},
+    ];
 
     showDialog(
       context: context,
@@ -82,64 +93,81 @@ class PantryListScreen extends StatelessWidget {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             title: const Text('Add Pantry Item'),
-            content: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter a name' : null,
-                  ),
-                  TextFormField(
-                    controller: quantityController,
-                    decoration: const InputDecoration(labelText: 'Quantity'),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a quantity';
-                      }
-                      if (int.tryParse(value) == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: minThresholdController,
-                    decoration:
-                        const InputDecoration(labelText: 'Low Stock Threshold'),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a threshold';
-                      }
-                      if (int.tryParse(value) == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                  DropdownButtonFormField<int>(
-                    initialValue: selectedCategoryId,
-                    decoration: const InputDecoration(labelText: 'Category'),
-                    items: categories.map((category) {
-                      return DropdownMenuItem(
-                        value: category.id,
-                        child: Text(category.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCategoryId = value;
-                      });
-                    },
-                    validator: (value) =>
-                        value == null ? 'Please select a category' : null,
-                  ),
-                ],
+            content: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: nameController,
+                      decoration: const InputDecoration(labelText: 'Name'),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Please enter a name' : null,
+                    ),
+                    TextFormField(
+                      controller: quantityController,
+                      decoration: const InputDecoration(labelText: 'Quantity'),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a quantity';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: minThresholdController,
+                      decoration:
+                          const InputDecoration(labelText: 'Low Stock Threshold'),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a threshold';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedUnit,
+                      decoration: const InputDecoration(labelText: 'Unit'),
+                      items: unitChoices.map((unit) {
+                        return DropdownMenuItem(
+                          value: unit['value'],
+                          child: Text(unit['label']!),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedUnit = value!;
+                        });
+                      },
+                    ),
+                    DropdownButtonFormField<int>(
+                      initialValue: selectedCategoryId,
+                      decoration: const InputDecoration(labelText: 'Category'),
+                      items: categories.map((category) {
+                        return DropdownMenuItem(
+                          value: category.id,
+                          child: Text(category.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCategoryId = value;
+                        });
+                      },
+                      validator: (value) =>
+                          value == null ? 'Please select a category' : null,
+                    ),
+                  ],
+                ),
               ),
             ),
             actions: [
@@ -153,10 +181,11 @@ class PantryListScreen extends StatelessWidget {
                     context.read<PantryBloc>().add(
                           AddPantryItem(
                             name: nameController.text,
-                            quantity: int.parse(quantityController.text),
+                            quantity: double.parse(quantityController.text),
                             minThreshold:
-                                int.parse(minThresholdController.text),
+                                double.parse(minThresholdController.text),
                             categoryId: selectedCategoryId!,
+                            unit: selectedUnit,
                           ),
                         );
                     Navigator.of(dialogContext).pop();

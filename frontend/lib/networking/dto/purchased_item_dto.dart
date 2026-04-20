@@ -24,7 +24,7 @@ class PurchasedItemDto with PurchasedItemDtoMappable {
   final int trip;
   final int pantryItem;
   final double purchasePrice;
-  final int quantityBought;
+  final double quantityBought;
   final int? createdBy;
   final int? updatedBy;
 

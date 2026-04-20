@@ -25,7 +25,7 @@ class TripApi {
     int tripId,
     int pantryItemId,
     double price, {
-    int quantity = 1,
+    double quantity = 1.0,
   }) async {
     return _apiClient.post(
       '/api/grocery/grocery-trips/$tripId/items/',

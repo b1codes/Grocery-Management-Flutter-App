@@ -13,7 +13,8 @@ class PantryItemDto with PantryItemDtoMappable {
     required this.name,
     this.category,
     required this.quantity,
-    this.minThreshold = 1,
+    this.unit = 'count',
+    this.minThreshold = 1.0,
     required this.regularPrice,
     required this.lastUpdated,
     this.upc,
@@ -30,8 +31,9 @@ class PantryItemDto with PantryItemDtoMappable {
   final int user;
   final String name;
   final int? category;
-  final int quantity;
-  final int minThreshold;
+  final double quantity;
+  final String unit;
+  final double minThreshold;
   final double regularPrice;
   final DateTime lastUpdated;
   final String? upc;

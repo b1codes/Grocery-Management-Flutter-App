@@ -52,7 +52,7 @@ class TripManager {
     int tripId,
     int pantryItemId,
     double price, {
-    int quantity = 1,
+    double quantity = 1.0,
   }) async {
     final response = await _tripApi.addItemToTrip(
       tripId,
@@ -70,7 +70,7 @@ class TripManager {
         tripId,
         ingredient.pantryItemTemplate.id,
         ingredient.pantryItemTemplate.regularPrice,
-        quantity: ingredient.quantity.toInt(),
+        quantity: ingredient.quantity,
       );
     }
   }

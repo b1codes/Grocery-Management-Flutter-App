@@ -2,14 +2,16 @@ import '../pantry_event.dart';
 
 class AddPantryItem extends PantryEvent {
   final String name;
-  final int quantity;
+  final double quantity;
   final int categoryId;
-  final int minThreshold;
+  final double minThreshold;
+  final String unit;
 
   AddPantryItem({
     required this.name,
     required this.quantity,
     required this.categoryId,
-    this.minThreshold = 1,
+    this.minThreshold = 1.0,
+    this.unit = 'count',
   });
 }

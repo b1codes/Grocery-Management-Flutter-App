@@ -16,7 +16,7 @@ class MealManager {
     try {
       for (final ingredient in meal.ingredients) {
         final item = ingredient.pantryItemTemplate;
-        final newQuantity = (item.quantity - ingredient.quantity).toInt();
+        final newQuantity = item.quantity - ingredient.quantity;
         await _pantryManager.updatePantryItemQuantity(
           item.id,
           newQuantity > 0 ? newQuantity : 0,

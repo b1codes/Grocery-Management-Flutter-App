@@ -29,13 +29,24 @@ class PantryItem(DefaultModel):
     Represents a generic item that can be stored in the pantry.
     This model holds the 'master' information about a product.
     """
+    UNIT_CHOICES = [
+        ('count', 'Count'),
+        ('kg', 'Kilograms'),
+        ('g', 'Grams'),
+        ('lb', 'Pounds'),
+        ('oz', 'Ounces'),
+        ('l', 'Liters'),
+        ('ml', 'Milliliters'),
+    ]
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-    quantity = models.PositiveIntegerField(default=0, help_text="Current quantity in the pantry.")
+    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Current quantity in the pantry.")
+    unit = models.CharField(max_length=10, choices=UNIT_CHOICES, default='count')
     regular_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="The typical, non-discounted price.")
     last_updated = models.DateTimeField(auto_now=True)
-    min_threshold = models.PositiveIntegerField(default=1, help_text="Notify when quantity drops below this.")
+    min_threshold = models.DecimalField(max_digits=10, decimal_places=2, default=1, help_text="Notify when quantity drops below this.")
     
     # Fields to be populated by the UPC API
     upc = models.CharField(max_length=50, blank=True, null=True, unique=True)

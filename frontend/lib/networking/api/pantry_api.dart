@@ -16,9 +16,10 @@ class PantryApi {
 
   Future<Response> createPantryItem(
     String name,
-    int quantity,
+    double quantity,
     int categoryId, {
-    int minThreshold = 1,
+    double minThreshold = 1.0,
+    String unit = 'count',
   }) async {
     return _apiClient.post(
       '/api/pantry/pantry-items/',
@@ -27,6 +28,7 @@ class PantryApi {
         'quantity': quantity,
         'category': categoryId,
         'min_threshold': minThreshold,
+        'unit': unit,
       },
     );
   }
@@ -35,8 +37,9 @@ class PantryApi {
     int id, {
     String? name,
     int? categoryId,
-    int? minThreshold,
-    int? quantity,
+    double? minThreshold,
+    double? quantity,
+    String? unit,
   }) async {
     return _apiClient.patch(
       '/api/pantry/pantry-items/$id/',
@@ -45,11 +48,12 @@ class PantryApi {
         if (categoryId != null) 'category': categoryId,
         if (minThreshold != null) 'min_threshold': minThreshold,
         if (quantity != null) 'quantity': quantity,
+        if (unit != null) 'unit': unit,
       },
     );
   }
 
-  Future<Response> updatePantryItemQuantity(int id, int quantity) async {
+  Future<Response> updatePantryItemQuantity(int id, double quantity) async {
     return _apiClient.patch('/api/pantry/pantry-items/$id/', data: {'quantity': quantity});
   }
 

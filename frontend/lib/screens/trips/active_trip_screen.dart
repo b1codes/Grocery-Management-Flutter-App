@@ -81,10 +81,11 @@ class ActiveTripView extends StatelessWidget {
                 itemCount: state.purchasedItems.length,
                 itemBuilder: (context, index) {
                   final item = state.purchasedItems[index];
-                  // This is a placeholder. We'll need a way to get pantry item details.
+                  // Ideally we'd have the pantry item name here, but item only has pantryItem ID.
                   return ListTile(
-                    title: Text('Pantry Item ID: ${item.id}'),
-                    subtitle: Text('Price: \$${item.purchasePrice}'),
+                    title: Text('Pantry Item ID: ${item.pantryItem}'),
+                    subtitle: Text(
+                        'Quantity: ${item.quantityBought} | Price: \$${item.purchasePrice}'),
                   );
                 },
               );
@@ -104,9 +105,13 @@ class ActiveTripView extends StatelessWidget {
             );
 
             if (pantryItem != null && context.mounted) {
-              final price = await _showAddItemDialog(context, pantryItem);
-              if (price != null) {
-                tripBloc.add(AddItemToTrip(pantryItemId: pantryItem.id, price: price));
+              final result = await _showAddItemDialog(context, pantryItem);
+              if (result != null) {
+                tripBloc.add(AddItemToTrip(
+                  pantryItemId: pantryItem.id,
+                  price: result['price'],
+                  quantity: result['quantity'],
+                ));
               }
             }
           },
@@ -122,31 +127,54 @@ class ActiveTripView extends StatelessWidget {
     );
   }
 
-  Future<double?> _showAddItemDialog(
+  Future<Map<String, dynamic>?> _showAddItemDialog(
       BuildContext context, PantryItem item) async {
-    final priceController = TextEditingController();
+    final priceController =
+        TextEditingController(text: item.regularPrice.toString());
+    final quantityController = TextEditingController(text: '1');
     final formKey = GlobalKey<FormState>();
 
-    return showDialog<double>(
+    return showDialog<Map<String, dynamic>>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text('Add ${item.name}'),
+          title: Text('Add ${item.name} (${item.unit})'),
           content: Form(
             key: formKey,
-            child: TextFormField(
-              controller: priceController,
-              decoration: const InputDecoration(labelText: 'Price'),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a price';
-                }
-                if (double.tryParse(value) == null) {
-                  return 'Please enter a valid number';
-                }
-                return null;
-              },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: 'Price'),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a price';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: quantityController,
+                  decoration: InputDecoration(labelText: 'Quantity (${item.unit})'),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a quantity';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
           ),
           actions: [
@@ -157,8 +185,10 @@ class ActiveTripView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  Navigator.of(dialogContext)
-                      .pop(double.parse(priceController.text));
+                  Navigator.of(dialogContext).pop({
+                    'price': double.parse(priceController.text),
+                    'quantity': double.parse(quantityController.text),
+                  });
                 }
               },
               child: const Text('Add'),

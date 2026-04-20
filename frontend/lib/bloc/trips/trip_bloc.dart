@@ -36,6 +36,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         state.trip!.id,
         event.pantryItemId,
         event.price,
+        quantity: event.quantity,
       );
       final updatedItems = List<PurchasedItem>.from(state.purchasedItems)
         ..add(newItem);

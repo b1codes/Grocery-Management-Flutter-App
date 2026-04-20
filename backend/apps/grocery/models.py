@@ -71,7 +71,7 @@ class PurchasedItem(DefaultModel):
     trip = models.ForeignKey(GroceryTrip, on_delete=models.CASCADE, related_name='purchased_items')
     pantry_item = models.ForeignKey(PantryItem, on_delete=models.CASCADE, related_name='purchase_history')
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity_bought = models.PositiveIntegerField(default=1)
+    quantity_bought = models.DecimalField(max_digits=10, decimal_places=2, default=1)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,

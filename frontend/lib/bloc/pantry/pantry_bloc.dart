@@ -73,6 +73,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> {
         event.quantity,
         event.categoryId,
         minThreshold: event.minThreshold,
+        unit: event.unit,
       );
       final updatedItems = List<PantryItem>.from(state.items)..add(newItem);
       emit(state.copyWith(status: PantryStatus.success, items: updatedItems));
@@ -92,6 +93,7 @@ class PantryBloc extends Bloc<PantryEvent, PantryState> {
         quantity: event.quantity,
         minThreshold: event.minThreshold,
         categoryId: event.categoryId,
+        unit: event.unit,
       );
       final newItems = state.items.map((item) {
         return item.id == updatedItem.id ? updatedItem : item;

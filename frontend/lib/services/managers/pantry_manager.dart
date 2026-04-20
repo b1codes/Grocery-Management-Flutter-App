@@ -27,15 +27,17 @@ class PantryManager {
 
   Future<PantryItem> createPantryItem(
     String name,
-    int quantity,
+    double quantity,
     int categoryId, {
-    int minThreshold = 1,
+    double minThreshold = 1.0,
+    String unit = 'count',
   }) async {
     final response = await _pantryApi.createPantryItem(
       name,
       quantity,
       categoryId,
       minThreshold: minThreshold,
+      unit: unit,
     );
     final pantryItemDto = PantryItemDto.fromMap(response.data);
     return pantryItemDto.toPantryItem();
@@ -45,8 +47,9 @@ class PantryManager {
     required int id,
     String? name,
     int? categoryId,
-    int? minThreshold,
-    int? quantity,
+    double? minThreshold,
+    double? quantity,
+    String? unit,
   }) async {
     final response = await _pantryApi.updatePantryItem(
       id,
@@ -54,12 +57,13 @@ class PantryManager {
       categoryId: categoryId,
       minThreshold: minThreshold,
       quantity: quantity,
+      unit: unit,
     );
     final pantryItemDto = PantryItemDto.fromMap(response.data);
     return pantryItemDto.toPantryItem();
   }
 
-  Future<PantryItem> updatePantryItemQuantity(int id, int quantity) async {
+  Future<PantryItem> updatePantryItemQuantity(int id, double quantity) async {
     return updatePantryItem(id: id, quantity: quantity);
   }
 
@@ -74,6 +78,7 @@ extension on PantryItemDto {
       id: id,
       name: name,
       quantity: quantity,
+      unit: unit,
       minThreshold: minThreshold,
       category: category,
       lastUpdated: lastUpdated,

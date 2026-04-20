@@ -54,8 +54,8 @@ class PurchasedItemDtoMapper extends ClassMapperBase<PurchasedItemDto> {
     _$purchasePrice,
     key: r'purchase_price',
   );
-  static int _$quantityBought(PurchasedItemDto v) => v.quantityBought;
-  static const Field<PurchasedItemDto, int> _f$quantityBought = Field(
+  static double _$quantityBought(PurchasedItemDto v) => v.quantityBought;
+  static const Field<PurchasedItemDto, double> _f$quantityBought = Field(
     'quantityBought',
     _$quantityBought,
     key: r'quantity_bought',
@@ -174,7 +174,7 @@ abstract class PurchasedItemDtoCopyWith<$R, $In extends PurchasedItemDto, $Out>
     int? trip,
     int? pantryItem,
     double? purchasePrice,
-    int? quantityBought,
+    double? quantityBought,
     int? createdBy,
     int? updatedBy,
   });
@@ -200,7 +200,7 @@ class _PurchasedItemDtoCopyWithImpl<$R, $Out>
     int? trip,
     int? pantryItem,
     double? purchasePrice,
-    int? quantityBought,
+    double? quantityBought,
     Object? createdBy = $none,
     Object? updatedBy = $none,
   }) => $apply(
