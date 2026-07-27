@@ -1,0 +1,13 @@
+project_id = "your-gcp-project-id"
+region     = "us-central1"
+
+# Required, no default - the app's google-generativeai integration reads this.
+gemini_api_key = "your-gemini-api-key"
+
+# Everything below has a sensible default from variables.tf; override only
+# if you need to.
+# service_name          = "grocery-backend"
+# db_tier               = "db-f1-micro"
+# firestore_location    = "nam5"
+# allow_unauthenticated = true
+# deletion_protection   = false
