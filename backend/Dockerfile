@@ -15,6 +15,9 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
+RUN useradd --create-home --uid 1000 appuser
+USER appuser
+
 EXPOSE 8080
 
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "2"]
