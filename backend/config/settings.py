@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from config.env import build_database_config, get_bool_env, get_list_env
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,9 +28,11 @@ AUTH_USER_MODEL = 'authentication.User'
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-q2mb41a+!lvya0flqz8ecl0lm@#@cx&=4&n6xou)*np713ioq8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = get_bool_env('DJANGO_DEBUG', True)
 
-ALLOWED_HOSTS = []
+# Empty by default so local DEBUG=True dev (which auto-allows localhost) is
+# unaffected. The GCP infra sets DJANGO_ALLOWED_HOSTS explicitly on deploy.
+ALLOWED_HOSTS = get_list_env('DJANGO_ALLOWED_HOSTS', [])
 
 
 # Application definition
@@ -84,12 +88,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = build_database_config(BASE_DIR)
 
 
 # Password validation
@@ -127,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
