@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/bloc/pantry/pantry_bloc.dart';
 import 'package:grocery_management_frontend/models/pantry_item.dart';
 import 'package:grocery_management_frontend/models/category.dart';
+import 'package:grocery_management_frontend/theme/app_theme.dart';
 
 class PantryItemCard extends StatelessWidget {
   final PantryItem item;
@@ -11,12 +12,21 @@ class PantryItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bool isLowStock = item.quantity <= item.minThreshold;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: isLowStock ? Colors.orange.withValues(alpha: 0.1) : null,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      color: isLowStock ? AppTheme.thermalCorona.withValues(alpha: 0.12) : null,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: isLowStock ? AppTheme.thermalCorona.withValues(alpha: 0.4) : AppTheme.glassBorder,
+          width: 1,
+        ),
+      ),
       child: InkWell(
+        borderRadius: BorderRadius.circular(16),
         onLongPress: () => _showEditPantryItemDialog(context, item),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -27,22 +37,35 @@ class PantryItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.name,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      item.name,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 4),
                     if (isLowStock)
-                      const Text('Low Stock',
-                          style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold)),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: AppTheme.thermalCorona.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppTheme.thermalCorona, width: 0.8),
+                        ),
+                        child: Text(
+                          'LOW STOCK',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: AppTheme.thermalCorona,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.remove),
+                    icon: const Icon(Icons.remove_circle_outline),
+                    tooltip: 'Decrease quantity',
                     onPressed: item.quantity > 0
                         ? () {
                             context.read<PantryBloc>().add(UpdatePantryItem(
@@ -52,10 +75,20 @@ class PantryItemCard extends StatelessWidget {
                           }
                         : null,
                   ),
-                  Text('${item.quantity % 1 == 0 ? item.quantity.toInt() : item.quantity} ${item.unit}',
-                      style: const TextStyle(fontSize: 18)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      '${item.quantity % 1 == 0 ? item.quantity.toInt() : item.quantity} ${item.unit}',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontFamily: 'JetBrains Mono',
+                        fontWeight: FontWeight.bold,
+                        color: isLowStock ? AppTheme.thermalCorona : AppTheme.textPrimary,
+                      ),
+                    ),
+                  ),
                   IconButton(
-                    icon: const Icon(Icons.add),
+                    icon: const Icon(Icons.add_circle_outline),
+                    tooltip: 'Increase quantity',
                     onPressed: () {
                       context.read<PantryBloc>().add(UpdatePantryItem(
                             id: item.id,

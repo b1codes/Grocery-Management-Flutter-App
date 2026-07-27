@@ -7,9 +7,11 @@ class StoreListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stores'),
+        title: const Text('Stores Directory'),
       ),
       body: BlocBuilder<StoreBloc, StoreState>(
         builder: (context, state) {
@@ -17,25 +19,85 @@ class StoreListScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (state.status == StoreStatus.failure) {
-            return const Center(child: Text('Failed to fetch stores'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
+                  const SizedBox(height: 16),
+                  Text('Failed to load store directory', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => context.read<StoreBloc>().add(FetchStores()),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Try Again'),
+                  ),
+                ],
+              ),
+            );
           }
           if (state.stores.isEmpty) {
-            return const Center(child: Text('No stores found.'));
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.storefront_outlined, size: 64, color: theme.colorScheme.secondary),
+                    const SizedBox(height: 16),
+                    Text('No Stores Saved Yet', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Save your favorite grocery stores to organize trips and track location spending.',
+                      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    FilledButton.icon(
+                      onPressed: () => _showAddStoreDialog(context),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add Favorite Store'),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
           return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             itemCount: state.stores.length,
             itemBuilder: (context, index) {
               final store = state.stores[index];
-              return ListTile(
-                title: Text(store.name),
-                subtitle: Text(store.address?.addressLine ?? 'No address'),
-                trailing: Text('${store.tripCount} trips'),
+              return Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: theme.colorScheme.primaryContainer,
+                    child: Icon(Icons.store, color: theme.colorScheme.primary),
+                  ),
+                  title: Text(
+                    store.name,
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    store.address?.addressLine ?? 'No address set',
+                    style: theme.textTheme.bodySmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: Text(
+                    '${store.tripCount} trips',
+                    style: theme.textTheme.labelLarge?.copyWith(fontFamily: 'JetBrains Mono'),
+                  ),
+                ),
               );
             },
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Add a new grocery store location',
         onPressed: () {
           _showAddStoreDialog(context);
         },

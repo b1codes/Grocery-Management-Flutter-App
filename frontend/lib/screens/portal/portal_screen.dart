@@ -34,24 +34,110 @@ class PortalScreen extends StatelessWidget {
           ),
         ),
       ],
-      child: Scaffold(
-        body: Row(
-          children: [
-            const SideBar(),
-            Expanded(
-              child: BlocBuilder<PortalBloc, PortalState>(
-                builder: (context, state) {
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
+      child: BlocBuilder<PortalBloc, PortalState>(
+        builder: (context, state) {
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final bool isCompact = constraints.maxWidth < 600;
+
+              if (isCompact) {
+                return Scaffold(
+                  drawer: const SideBar(isDrawer: true),
+                  body: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
                     child: _buildContent(state.selectedTab),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+                  ),
+                  bottomNavigationBar: NavigationBar(
+                    selectedIndex: _mapTabToBottomNavIndex(state.selectedTab),
+                    onDestinationSelected: (index) {
+                      final targetTab = _mapBottomNavIndexToTab(index, context);
+                      context.read<PortalBloc>().add(SelectTab(targetTab));
+                    },
+                    destinations: const [
+                      NavigationDestination(
+                        icon: Icon(Icons.dashboard_outlined),
+                        selectedIcon: Icon(Icons.dashboard),
+                        label: 'Home',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.kitchen_outlined),
+                        selectedIcon: Icon(Icons.kitchen),
+                        label: 'Pantry',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.restaurant_menu_outlined),
+                        selectedIcon: Icon(Icons.restaurant_menu),
+                        label: 'Meals',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.shopping_cart_outlined),
+                        selectedIcon: Icon(Icons.shopping_cart),
+                        label: 'Trips',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.menu_outlined),
+                        selectedIcon: Icon(Icons.menu),
+                        label: 'More',
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return Scaffold(
+                body: Row(
+                  children: [
+                    const SideBar(isDrawer: false),
+                    Expanded(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        child: _buildContent(state.selectedTab),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
+  }
+
+  int _mapTabToBottomNavIndex(TabItem tab) {
+    switch (tab) {
+      case TabItem.dashboard:
+        return 0;
+      case TabItem.pantry:
+        return 1;
+      case TabItem.meals:
+        return 2;
+      case TabItem.trips:
+        return 3;
+      case TabItem.stores:
+      case TabItem.budget:
+      case TabItem.insights:
+      case TabItem.settings:
+        return 4;
+    }
+  }
+
+  TabItem _mapBottomNavIndexToTab(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        return TabItem.dashboard;
+      case 1:
+        return TabItem.pantry;
+      case 2:
+        return TabItem.meals;
+      case 3:
+        return TabItem.trips;
+      case 4:
+        Scaffold.of(context).openDrawer();
+        return context.read<PortalBloc>().state.selectedTab;
+      default:
+        return TabItem.dashboard;
+    }
   }
 
   Widget _buildContent(TabItem tab) {
@@ -71,7 +157,7 @@ class PortalScreen extends StatelessWidget {
       case TabItem.insights:
         return const InsightsScreen();
       case TabItem.settings:
-        return const Center(child: Text("Settings Module Coming Soon"));
+        return const Center(child: Text("Settings Module"));
     }
   }
 }

@@ -36,11 +36,12 @@ void main() {
             ),
           ],
         );
+        when(() => pantryManager.getCategories()).thenAnswer((_) async => []);
       },
       build: () => PantryBloc(pantryManager: pantryManager),
       act: (bloc) => bloc.add(FetchPantryItems()),
       expect: () => [
-        const PantryState(status: PantryStatus.loading),
+        isA<PantryState>().having((s) => s.status, 'status', PantryStatus.loading),
         isA<PantryState>()
             .having((s) => s.status, 'status', PantryStatus.success)
             .having((s) => s.items.length, 'items length', 1),

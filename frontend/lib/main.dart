@@ -15,6 +15,7 @@ import 'package:grocery_management_frontend/screens/auth/register_screen.dart';
 import 'package:grocery_management_frontend/screens/portal/portal_screen.dart';
 import 'package:grocery_management_frontend/services/app_config.dart';
 import 'package:grocery_management_frontend/services/startup_services.dart';
+import 'package:grocery_management_frontend/theme/app_theme.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
@@ -59,11 +60,10 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => PortalBloc()),
         ],
         child: MaterialApp(
-          title: 'Grocery Management',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
+          title: 'Grocery Hub',
+          themeMode: ThemeMode.dark,
+          theme: AppTheme.darkTheme,
+          darkTheme: AppTheme.darkTheme,
           home: const AuthWrapper(),
           routes: {
             '/login': (context) => const LoginScreen(),

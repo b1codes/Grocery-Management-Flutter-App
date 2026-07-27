@@ -9,6 +9,8 @@ class PantryListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pantry'),
@@ -16,6 +18,7 @@ class PantryListScreen extends StatelessWidget {
           BlocBuilder<PantryBloc, PantryState>(
             builder: (context, state) {
               return PopupMenuButton<int?>(
+                tooltip: 'Filter by category',
                 icon: const Icon(Icons.filter_list),
                 onSelected: (categoryId) {
                   context.read<PantryBloc>().add(SetCategoryFilter(categoryId));
@@ -41,13 +44,52 @@ class PantryListScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (state.status == PantryStatus.failure) {
-            return const Center(child: Text('Failed to fetch pantry items'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
+                  const SizedBox(height: 16),
+                  Text('Failed to fetch pantry items', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => context.read<PantryBloc>().add(FetchPantryItems()),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Try Again'),
+                  ),
+                ],
+              ),
+            );
           }
           
           final items = state.filteredItems;
           
           if (items.isEmpty) {
-            return const Center(child: Text('No items in pantry.'));
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.kitchen_outlined, size: 64, color: theme.colorScheme.secondary),
+                    const SizedBox(height: 16),
+                    Text('Pantry is Empty', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Keep track of your food stock, quantities, and expiration thresholds.',
+                      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    FilledButton.icon(
+                      onPressed: () => _showAddPantryItemDialog(context),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add First Item'),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
           return ListView.builder(
             itemCount: items.length,
@@ -59,6 +101,7 @@ class PantryListScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Add new item to pantry',
         onPressed: () {
           _showAddPantryItemDialog(context);
         },

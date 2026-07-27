@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_management_frontend/bloc/budget/budget_bloc.dart';
 import 'package:grocery_management_frontend/models/monthly_budget.dart';
 import 'package:grocery_management_frontend/services/managers/budget_manager.dart';
+import 'package:grocery_management_frontend/theme/app_theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 
@@ -52,14 +53,25 @@ class BudgetOverviewScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 16),
-                ...stats.spendingTrends.reversed.map((trend) => ListTile(
-                      leading: const Icon(Icons.shopping_cart),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: stats.spendingTrends.length,
+                  itemBuilder: (context, index) {
+                    final trend = stats.spendingTrends.reversed.elementAt(index);
+                    return ListTile(
+                      leading: const Icon(Icons.shopping_cart_outlined, color: AppTheme.cyanSignal),
                       title: Text(DateFormat('MMM dd, yyyy').format(trend.date)),
                       trailing: Text(
                         '\$${trend.amount.toStringAsFixed(2)}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontFamily: 'JetBrains Mono',
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                    )),
+                    );
+                  },
+                ),
               ],
             ),
           );
@@ -82,9 +94,9 @@ class BudgetOverviewScreen extends StatelessWidget {
     double percent,
     bool isOverBudget,
   ) {
+    final theme = Theme.of(context);
+
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -96,14 +108,16 @@ class BudgetOverviewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Spent',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      'TOTAL SPENT',
+                      style: theme.textTheme.labelLarge,
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       '\$${spent.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                            fontFamily: 'JetBrains Mono',
                             fontWeight: FontWeight.bold,
-                            color: isOverBudget ? Colors.red : null,
+                            color: isOverBudget ? AppTheme.thermalCore : AppTheme.textPrimary,
                           ),
                     ),
                   ],
@@ -112,12 +126,16 @@ class BudgetOverviewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'Monthly Budget',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      'MONTHLY BUDGET',
+                      style: theme.textTheme.labelLarge,
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       '\$${budget.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontFamily: 'JetBrains Mono',
+                        color: AppTheme.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -126,17 +144,20 @@ class BudgetOverviewScreen extends StatelessWidget {
             const SizedBox(height: 20),
             LinearProgressIndicator(
               value: percent,
-              minHeight: 12,
+              minHeight: 10,
               borderRadius: BorderRadius.circular(6),
-              backgroundColor: Colors.grey[200],
-              color: isOverBudget ? Colors.red : Colors.green,
+              backgroundColor: AppTheme.surfaceElevated,
+              color: isOverBudget ? AppTheme.thermalCore : AppTheme.cyanSignal,
             ),
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
                 '${(percent * 100).toStringAsFixed(1)}% of budget used',
-                style: Theme.of(context).textTheme.bodySmall,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontFamily: 'JetBrains Mono',
+                  color: isOverBudget ? AppTheme.thermalCore : AppTheme.textSecondary,
+                ),
               ),
             ),
           ],
@@ -156,7 +177,6 @@ class BudgetOverviewScreen extends StatelessWidget {
     final List<FlSpot> spots = [];
     double cumulativeSpent = 0;
 
-    // Create a list of all days in the month up to now
     final now = DateTime.now();
     final daysInMonth = DateUtils.getDaysInMonth(stats.year, stats.month);
     final lastDayToShow = (stats.year == now.year && stats.month == now.month)
@@ -190,7 +210,10 @@ class BudgetOverviewScreen extends StatelessWidget {
                 showTitles: true,
                 getTitlesWidget: (value, meta) {
                   if (value == 1 || value == 15 || value == lastDayToShow.toDouble()) {
-                    return Text(value.toInt().toString());
+                    return Text(
+                      value.toInt().toString(),
+                      style: const TextStyle(fontFamily: 'JetBrains Mono', fontSize: 11, color: AppTheme.textSecondary),
+                    );
                   }
                   return const Text('');
                 },
@@ -202,16 +225,15 @@ class BudgetOverviewScreen extends StatelessWidget {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: Colors.blue,
-              barWidth: 4,
+              color: AppTheme.cyanSignal,
+              barWidth: 3.5,
               isStrokeCapRound: true,
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: AppTheme.cyanSignal.withValues(alpha: 0.15),
               ),
             ),
-            // Budget reference line
             if (stats.budgetAmount > 0)
               LineChartBarData(
                 spots: [
@@ -219,9 +241,9 @@ class BudgetOverviewScreen extends StatelessWidget {
                   FlSpot(lastDayToShow.toDouble(), stats.budgetAmount),
                 ],
                 isCurved: false,
-                color: Colors.red.withValues(alpha: 0.5),
+                color: AppTheme.thermalCore.withValues(alpha: 0.7),
                 barWidth: 2,
-                dashArray: [5, 5],
+                dashArray: [6, 4],
                 dotData: const FlDotData(show: false),
               ),
           ],
