@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 from config.env import build_database_config, get_bool_env, get_list_env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,6 +31,11 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-q2mb41a+!lvya0flqz8
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = get_bool_env('DJANGO_DEBUG', True)
+
+if not DEBUG and not os.getenv('DJANGO_SECRET_KEY'):
+    raise ImproperlyConfigured(
+        'DJANGO_SECRET_KEY environment variable must be set when DEBUG is False.'
+    )
 
 # Empty by default so local DEBUG=True dev (which auto-allows localhost) is
 # unaffected. The GCP infra sets DJANGO_ALLOWED_HOSTS explicitly on deploy.
@@ -134,3 +141,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+
+# Production hardening for running behind Cloud Run's TLS-terminating proxy.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_TRUSTED_ORIGINS = get_list_env('DJANGO_CSRF_TRUSTED_ORIGINS', [])

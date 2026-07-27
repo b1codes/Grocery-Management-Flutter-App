@@ -7,5 +7,11 @@ resource "google_firestore_database" "default" {
   location_id = var.firestore_location
   type        = "FIRESTORE_NATIVE"
 
+  # Empty/unused today (see comment above), so deleting on destroy is safe.
+  # Default is ABANDON, which would leave the database behind in GCP and
+  # break a subsequent `apply` (only one `(default)` database is allowed
+  # per project).
+  deletion_policy = "DELETE"
+
   depends_on = [google_project_service.apis]
 }

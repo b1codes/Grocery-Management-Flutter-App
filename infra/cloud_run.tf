@@ -4,6 +4,8 @@ resource "google_cloud_run_v2_service" "backend" {
   location = var.region
   ingress  = "INGRESS_TRAFFIC_ALL"
 
+  deletion_protection = var.deletion_protection
+
   template {
     service_account = google_service_account.cloud_run.email
 
@@ -110,6 +112,10 @@ resource "google_cloud_run_v2_service" "backend" {
     google_secret_manager_secret_version.django_secret_key,
     google_secret_manager_secret_version.db_password,
     google_secret_manager_secret_version.gemini_api_key,
+    google_secret_manager_secret_iam_member.django_secret_key_access,
+    google_secret_manager_secret_iam_member.db_password_access,
+    google_secret_manager_secret_iam_member.gemini_api_key_access,
+    google_project_iam_member.cloud_run_sql_client,
   ]
 }
 

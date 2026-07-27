@@ -7,6 +7,9 @@ locals {
     "firestore.googleapis.com",
     "cloudbuild.googleapis.com",
     "compute.googleapis.com",
+    "iam.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "storage.googleapis.com",
   ]
 }
 

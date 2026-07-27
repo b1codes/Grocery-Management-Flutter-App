@@ -96,11 +96,25 @@ migration off Cloud SQL doesn't need a new infra step. Nothing in the Django
 app talks to it yet — see
 `docs/superpowers/specs/2026-07-27-gcp-terraform-infra-design.md`.
 
+## Troubleshooting first apply
+
+- IAM permission errors (e.g. Cloud Run failing to read a secret or connect
+  to Cloud SQL) on the very first `apply` are often just IAM propagation
+  delay — re-run `terraform apply` and it typically succeeds.
+- `gcloud builds submit` may fail to push to Artifact Registry on some
+  projects because the Cloud Build default service account lacks
+  `roles/artifactregistry.writer` — grant that (and `roles/logging.logWriter`
+  if logs fail to write) to the Cloud Build service account before retrying.
+
 ## Tearing down
 
 ```bash
 terraform destroy
 ```
 
-Note `deletion_protection` on the Cloud SQL instance must be `false` (the
-default) for `destroy` to remove it.
+Note `deletion_protection` (the same variable) on both the Cloud SQL instance
+and the Cloud Run service must be `false` (the default) for `destroy` to
+remove them. Firestore is set to `deletion_policy = "DELETE"`, so it's
+actually deleted on destroy rather than left behind (the provider default,
+`ABANDON`, would otherwise silently leave it in GCP and break the next
+`apply` since a project can only have one `(default)` database).

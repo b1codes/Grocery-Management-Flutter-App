@@ -19,6 +19,10 @@ class GetBoolEnvTests(unittest.TestCase):
     def test_parses_true_case_insensitive(self):
         self.assertTrue(get_bool_env('DJANGO_DEBUG', False))
 
+    @mock.patch.dict('os.environ', {'DJANGO_DEBUG': ''}, clear=True)
+    def test_empty_string_returns_default(self):
+        self.assertTrue(get_bool_env('DJANGO_DEBUG', True))
+
 
 class GetListEnvTests(unittest.TestCase):
     @mock.patch.dict('os.environ', {}, clear=True)
@@ -61,3 +65,8 @@ class BuildDatabaseConfigTests(unittest.TestCase):
             'HOST': '/cloudsql/proj:region:instance',
             'PORT': '5432',
         })
+
+    @mock.patch.dict('os.environ', {'DB_ENGINE': 'postgresql'}, clear=True)
+    def test_raises_on_unrecognized_engine(self):
+        with self.assertRaises(ValueError):
+            build_database_config(self.base_dir)
