@@ -10,6 +10,8 @@ phonenumbers = "*"
 python-dateutil = "*"
 django-filter = "*"
 google-generativeai = "*"
+gunicorn = "*"
+psycopg = {extras = ["binary"], version = "*"}
 
 [dev-packages]
 django-debug-toolbar = "*"
